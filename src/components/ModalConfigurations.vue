@@ -3,7 +3,7 @@
 
     <v-dialog
       v-model="opener"
-      width="30em"
+      width="32em"
       >
       <template v-slot:activator=" { on } ">
         <v-icon v-on="on"></v-icon>
@@ -11,12 +11,14 @@
 
       <v-card>
         <v-img
-          src="https://i.ibb.co/34c9z3j/Angie-Zu-iga.png"
+          style="background-color: grey"
+          :src="getImage"
           class="align-end"
-          height="15em"
+          height="16em"
+          @click="changeImage"
           >
           <v-card-title class="name">
-            Cristina de la Hoz Martinez Correa
+            {{ getName }}
           </v-card-title>
         </v-img>
         <v-card-text
@@ -102,7 +104,8 @@
 
 <script>
 import  KeyGenerator from '../components/KeyGenerator.vue'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
+import server from '../controller/serverRequest.js' 
 
 export default {
 
@@ -130,7 +133,13 @@ export default {
     logout() {
       this.setToken('')
       this.$router.push('/')
+    },
+    changeImage() {
+      server.getInfo(this.getEmail, this.getToken) 
     }
+  },
+  computed: {
+    ...mapGetters(['getToken', 'getEmail', 'getName', 'getImage'])
   },
   components:{
     KeyGenerator

@@ -136,7 +136,7 @@
 <script>
 import serverRequest from '../controller/serverRequest.js'
 import Error from '../components/ModalErrors.vue'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
   
   export default {
 
@@ -147,17 +147,21 @@ import { mapGetters, mapMutations } from 'vuex'
       errorMsg: '',
       openError: false
     }),
-    computed: {
-      ...mapGetters(['getToken'])
-    },
     methods:{
-      ...mapMutations(['setToken']),
+      ...mapMutations(['setToken', 'setEmail', 'setName', 'setImage']),
       verifyData(){
         const response = serverRequest.login(this.email, this.password)
         response.then(res => {
           if(res.status == 200){
-            console.log(res.data.token)
+
+            this.password = ''
+            this.email = ''
+
             this.setToken(res.data.token)
+            this.setEmail(res.data.data[0]._id)
+            this.setName(res.data.data[0].nombre)
+            this.setImage(res.data.data[0].imagen)
+            
             this.openPrincipalView()
           } 
           else{

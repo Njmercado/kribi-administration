@@ -4,8 +4,19 @@ const serverKey = require('../controller/keys').serverKey
 
 class serverRequest {
   static login(email, password){
-    const uri = `${serverUri}/login?email=${email}&password=${password}`
-    return axios.get(uri).then(result => {
+    const uri = `${serverUri}/login`
+    const params = {
+      email:email,
+      password:password
+    }
+    return axios({
+      method: 'get',
+      url: uri,
+      params: params,
+      headers: {
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
       return result
     }).catch(err => {
       return {
@@ -17,16 +28,23 @@ class serverRequest {
 
   static register(name, email, password, registeredEmail, code) {
 
-    email = `email=${email}`
-    name = `name=${name}`
-    password = `password=${password}`
-    registeredEmail = `registeredEmail=${registeredEmail}`
-    code = `code=${code}`
-    const key = `key=${serverKey}`
-    const params = `${email}&${password}&${name}&${registeredEmail}&${code}&${key}` 
-
-    const uri = `${serverUri}/register/user?${params}`
-    return axios.post(uri).then(result => {
+    const uri = `${serverUri}/register/user`
+    const params = {
+      email: email,
+      name: name,
+      password: password,
+      registeredEmail: registeredEmail,
+      code: code
+    }
+    
+    return axios({
+      method: 'post',
+      url: uri,
+      params: params,
+      headers: {
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
       return {
         status: result.status,
         msg: result.data
@@ -36,6 +54,26 @@ class serverRequest {
         status: err.response.status, 
         msg: err.response.data.msg
       } 
+    })
+  }
+
+  static getInfo(email, token) {
+
+    const uri =  `${serverUri}/user/info`
+    return axios({
+      method: 'get',
+      url: uri,
+      params: {
+        email: email,
+      },
+      headers: {
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server' : 'Basic ' + serverKey
+      }
+    }).then(result => {
+      console.log(result.data)
+    }).catch(err => {
+      console.log(err.response.msg)
     })
   }
 }

@@ -5,11 +5,23 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: ''
+    token: '',
+    email: '',
+    name: '',
+    image: ''
   },
   mutations: {
     setToken(state, token) {
       state.token = token
+    },
+    setEmail(state, email) {
+      state.email = email
+    },
+    setName(state, name) {
+      state.name = name 
+    },
+    setImage(state, image) {
+      state.image = image 
     }
   },
   actions: {
@@ -17,6 +29,9 @@ export default new Vuex.Store({
   modules: {
   },
   getters: {
-    getToken: state => state.token
+    getToken: state => state.token,
+    getEmail: state => state.email,
+    getName: state => state.name,
+    getImage: state => state.image,
   }
 })

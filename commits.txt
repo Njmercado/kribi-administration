@@ -1,15 +1,9 @@
 Modificaciones:
   Generales:
-    + Primer commit.
-    + Administración para el proyecto Kribi
+    + Agregada la autenticación para que el servidor pueda verificar que el usuario actual pueda realizar modificaciones
+    + Vuex ha sido agregado
   Views: 
-    * Home:
-      + Vista principal, donde el usuario puede modificar palabras y todo por el estilo
-    * Login:
-      + El usuario es capaz de poder ingresar a su perfil por medio de un login que ya ha sido implementado.
-    * Register:
-      + El usuario puede crear su propio perfil
-  Routes:
     * Dashboard:
-      + Se ha agregado la opcion de que si el usuario ingresa directamente a esta ruta, sin antes haber pasado por el login, esta le redireccionará a la ruta del login
-      
+      + Ahora el usuario puede ver tanto su nombre, como su foto de perfil cuando se logea
+  Requests:
+    + Existe una 'ruta' (funcion) que ahora me permite obtener la info del usuario loguead --> No creo que funcione para algo, pero la dejaré.
