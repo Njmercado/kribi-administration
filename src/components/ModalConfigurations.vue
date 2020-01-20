@@ -44,19 +44,6 @@
             color="teal"
             block
             dark
-          >
-            <v-icon
-              small
-              style="margin-right: 1vw"
-            >mdi-email</v-icon>
-              Cambiar Correo
-          </v-btn>
-          <v-btn
-            style="margin-top: 1vh"
-            class="text-capitalize"
-            color="teal"
-            block
-            dark
             @click="showKeyGeneratorModal"
           >
             <v-icon

@@ -1,9 +1,19 @@
 Modificaciones:
   Generales:
-    + Agregada la autenticación para que el servidor pueda verificar que el usuario actual pueda realizar modificaciones
-    + Vuex ha sido agregado
   Views: 
     * Dashboard:
-      + Ahora el usuario puede ver tanto su nombre, como su foto de perfil cuando se logea
+      - Eliminados los botones para seleccionar el idioma con el cual se vaya a trabajar
+  Componentes:
+    ModalConfigurations:
+      - Eliminado campo para cambio de correo --> innecesario.
+    ModalWordInformation:
+      + Ya se pueden crear las palabras.
+      + Se indica el idioma al cual la palabra buscada pertenece
+    ModalError:
+      - Eliminado
+      + Ha sido cambiado por ModalStatus, el cual no me muestra un modal si no una notificación 
   Requests:
-    + Existe una 'ruta' (funcion) que ahora me permite obtener la info del usuario loguead --> No creo que funcione para algo, pero la dejaré.
+    CreateWord:
+      + Creado este request para poder crear palabras, dependiendo de la escogencia tomada, paleque o español
+    DeleteWord:
+      + Este request ahora me funciona para poder eliminar las palabras que has sido seleccionadas por el usuario

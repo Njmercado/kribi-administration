@@ -1,61 +1,46 @@
 <template>
   <v-container fluid>
-    <v-row justify="end" align="center">
-      <v-col cols="2" md="1" sm="1" xs="1" lg="1">
-        <v-btn
-          color="teal"
-          @click="showConfigurationModal"
-          small fab dark
+    <v-row justify="start">
+      <v-speed-dial
+        direction="right"
+        transition="fade-transition"
+        top left
+        open-on-hover
+      >
+        <template v-slot:activator>
+          <v-btn fab dark color="grey">
+            <v-icon>mdi-settings</v-icon>
+          </v-btn>
+        </template>
+          <v-btn
+            color="#CD982B"
+            @click="showConfigurationModal"
+            small fab dark
           >
           <v-icon>mdi-format-list-bulleted-square</v-icon>
         </v-btn>
-      </v-col>
-      <v-col cols="2" md="1" sm="1" xs="1" lg="1">
         <v-btn
-          color="teal"
+          color="blue darken-1"
           @click="showWordInformationModal('create')"
           small fab dark
-          >
-          <v-icon>
-            mdi-plus
-          </v-icon>
+        >
+          <v-icon>mdi-file-word-box</v-icon>
         </v-btn>
-      </v-col>
-    </v-row>
-    <v-row justify="center">
-      <v-col align="center" lg="1" md="2" sm="3" xs="12">
         <v-btn
           color="#8c3420"
-          class="text-lowercase"
-          @click="espanolOrPalenque = true"
-          dark
-          >
-          <v-icon v-if="espanolOrPalenque" small>
-            mdi-checkbox-blank-circle
-          </v-icon>
-          Español
+          @click="showWordInformationModal('create')"
+          small fab dark
+        >
+          <v-icon>mdi-file-document-outline</v-icon>
         </v-btn>
-      </v-col>
-      <v-col align="center" lg="1" md="2" sm="3" xs="12">
-        <v-btn
-          color="#CD982B"
-          class="text-lowercase"
-          @click="espanolOrPalenque = false"
-          dark
-          >
-          <v-icon v-if="!espanolOrPalenque" small>
-            mdi-checkbox-blank-circle
-          </v-icon>
-          Palenque
-        </v-btn>
-      </v-col>
+      </v-speed-dial>
     </v-row>
     <v-row justify="center" style="margin-top: 5vh">
-      <v-col cols="12" md="3" lg="3" xs="12" sm="8">
+      <v-col cols="12" md="3" lg="3" xl="3" xs="12" sm="8">
         <v-text-field
-          placeholder="buscar palabra"
-          label="Bucador"
-          color="error"
+          v-model="wordToFind"
+          label="Buscar palabra"
+          color="grey"
           rounded filled dense
           >
         </v-text-field>
@@ -65,11 +50,13 @@
       <v-col
         v-for="(word, index) in words"
         :key="index"
-        cols="12" xlg="auto" lg="auto" md="auto" sm="auto" xs="12"
+        cols="12" xlg="auto" lg="auto" md="auto" sm="12" xs="12"
+        @click="findWordInfo(word, index)"
       >
-        <Word :word="word.word" :definition="word.definition"></Word>
+        <Word :word="word"></Word>
       </v-col>
     </v-row>
+
     <!-- Dialog callers -->
 
     <ModalConfigurations
@@ -81,8 +68,13 @@
     <ModalWordInformation
       :open="openCloseWordInformationModal"
       :action="modalWordInformationAction"
-      word="Troja"
-      >
+      :word="foundWord"
+      :definitions="definitionFoundWord"
+      :examples="examplesFoundWord"
+      :language="wordLanguage"
+      :wordIndex="wordIndex"
+      @wordDeleted = "wordDeletedHandler"
+    >
     </ModalWordInformation>
   </v-container>
 </template>
@@ -92,31 +84,58 @@
 import Word from '../components/Word.vue'
 import ModalConfigurations from '../components/ModalConfigurations.vue'
 import ModalWordInformation from '../components/ModalWordInformation.vue'
+import request from '../controller/serverRequest'
 
 export default {
 
   name: "",
   data: () => ({
-    words: [
-      {word:"Esternocleidomastoideo", definition: "This is a really really long word to describe something"},
-      {word:"Esternocleidomastoideo", definition: "This is a really really long word to describe something"},
-      {word:"Esternocleidomastoideo", definition: "This is a really really long word to describe something"},
-      {word:"Esternocleidomastoideo", definition: "This is a really really long word to describe something"},
-      {word:"Esternocleidomastoideo", definition: "This is a really really long word to describe something"},
-    ],
+    words: [],
     openCloseConfigurationModal: false,
     openCloseWordInformationModal: false,
     modalWordInformationAction: "update",
-    espanolOrPalenque: false // true --> españon; false --> palenque
+    wordToFind: '', // this variable is different to foundWord, because this is used to autocomplete
+    foundWord: '', // and this is used to get the word when user click on one
+    definitionFoundWord: [],
+    examplesFoundWord: '',
+    wordLanguage: '',
+    wordIndex: ''
   }),
   methods:{
     showConfigurationModal(){
       this.openCloseConfigurationModal= !this.openCloseConfigurationModal
     },
-    showWordInformationModal(val){
-      this.modalWordInformationAction = val
+    showWordInformationModal(action, index){
+      this.modalWordInformationAction = action 
+      this.wordIndex = index
       this.openCloseWordInformationModal = !this.openCloseWordInformationModal
     },
+    findWordInfo(word, index){
+      request.getWordInfo(word)
+      .then(result => {
+        this.foundWord = result.palabra
+        this.definitionFoundWord = result.definicion.split("/")
+        this.examplesFoundWord = result.ejemplos
+        this.wordLanguage = result.idioma
+        this.showWordInformationModal('update', index)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    wordDeletedHandler(index){
+      this.words.splice(index, 1) // Delete deleted word from found words
+    }
+  },
+  watch:{
+    wordToFind(val) { // Each time user input on searcher field this
+      this.words = [] // gonna get trigger and search on server will be activated
+      request.getWord(val, '')
+      .then(result => {
+        this.words = result
+      }).catch(err => {
+        console.log(err)
+      })
+    }
   },
   components:{
     Word,

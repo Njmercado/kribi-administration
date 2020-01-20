@@ -129,13 +129,13 @@
           </v-row>
         </v-container>
       </v-col>
-      <Error :open="openError" :content="errorMsg"></Error>
+      <Status :open="openError" :content="errorMsg" type="error"></Status>
     </v-row>
 </template>
 
 <script>
 import serverRequest from '../controller/serverRequest.js'
-import Error from '../components/ModalErrors.vue'
+import Status from '../components/ModalStatus.vue'
 import { mapMutations } from 'vuex'
   
   export default {
@@ -175,7 +175,7 @@ import { mapMutations } from 'vuex'
       }
     },
     components:{
-      Error
+      Status
     }  
   } 
 </script>

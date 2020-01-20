@@ -149,13 +149,13 @@
           </v-row>
         </v-container>
       </v-col>
-      <Error :open="openError" :content="errorMsg"></Error>
+      <Status :open="openError" :content="errorMsg" :type="typeMsg"></Status>
     </v-row>
 </template>
 
 <script>
 import serverRequest from '../controller/serverRequest.js'
-import Error from '../components/ModalErrors.vue'
+import Status from '../components/ModalStatus.vue'
   
   export default {
 
@@ -169,6 +169,7 @@ import Error from '../components/ModalErrors.vue'
       openError: false,
       errorMsg: '',
       isTypingCode: 0,
+      typeMsg: 'error'
     }),
     methods:{
       verifyData() {
@@ -178,9 +179,16 @@ import Error from '../components/ModalErrors.vue'
           this.password, 
           this.registeredEmail, 
           this.code
-        ).then(result => {
-          if(result.status == 200) this.redirectToLogin() 
-          else{
+        ).then(async result => {
+          if(result.status == 200) {
+            this.openError = await !this.openError
+            this.errorMsg = await result.msg
+            this.typeMsg = await 'success'
+            setTimeout(() => {
+              this.redirectToLogin() 
+            }, 1000)
+          }else{
+            this.typeMsg = await 'error'
             this.openError = !this.openError 
             this.errorMsg = result.msg
           } 
@@ -204,7 +212,7 @@ import Error from '../components/ModalErrors.vue'
 
     },
     components:{
-      Error
+      Status
     }  
   } 
 </script>

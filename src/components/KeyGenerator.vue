@@ -90,13 +90,5 @@ export default {
       //After that make avaliable the key button
     }
   },
-  components:{
-
-  }  
 } 
 </script>
-
-<style>
-
-</style>
-

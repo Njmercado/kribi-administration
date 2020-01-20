@@ -1,6 +1,6 @@
 <template>
     <v-row>
-      <ModalErrors :open="openCloseModalError" :content="modalMessage"></ModalErrors>
+      <Status :open="openCloseModalError" :content="modalMessage"></Status>
       <v-col
         cols="12"
         md="12"
@@ -177,7 +177,7 @@
 
 <script>
 
-import ModalErrors from '../components/ModalErrors.vue'
+import Status from '../components/ModalStatus.vue'
 
   export default {
 
@@ -214,8 +214,7 @@ import ModalErrors from '../components/ModalErrors.vue'
       },
     },
     components:{
-
-      ModalErrors,
+      Status
     }  
   } 
 </script>

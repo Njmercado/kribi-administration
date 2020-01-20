@@ -76,6 +76,92 @@ class serverRequest {
       console.log(err.response.msg)
     })
   }
+
+  static getWord(word, token) {
+
+    const uri =  `${serverUri}/word`
+
+    return axios({
+      method: 'get',
+      url: uri,
+      params: {
+        word: word
+      },
+      headers: {
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server' : 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data.response
+    }).catch(err => {
+      return err.response
+    })
+  }
+
+  static getWordInfo(word, token) {
+
+    const uri =  `${serverUri}/word/info`
+
+    return axios({
+      method: 'get',
+      url: uri,
+      params: {
+        word: word
+      },
+      headers: {
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server' : 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data
+    }).catch(err => {
+      return err.response
+    })
+  }
+
+  static createWord(word, definitions, examples, language, token) {
+    const uri = `${serverUri}/word`
+
+    return axios({
+      method: 'post',
+      url: uri,
+      params:{
+        word: word,
+        definitions: definitions,
+        examples: examples,
+        language: language 
+      },
+      headers:{
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data
+    }).catch(err => {
+      return err.response.data
+    })
+  }
+
+  static deleteWord(word, language, token) {
+    const uri = `${serverUri}/word`
+
+    return axios({
+      method: 'delete',
+      url: uri,
+      params:{
+        word: word,
+        language: language 
+      },
+      headers:{
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data
+    }).catch(err => {
+      return err.response.data
+    })
+  }
 }
 
 export default serverRequest
