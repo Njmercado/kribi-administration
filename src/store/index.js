@@ -8,7 +8,8 @@ export default new Vuex.Store({
     token: '',
     email: '',
     name: '',
-    image: ''
+    image: '',
+    description: ''
   },
   mutations: {
     setToken(state, token) {
@@ -33,5 +34,6 @@ export default new Vuex.Store({
     getEmail: state => state.email,
     getName: state => state.name,
     getImage: state => state.image,
+    getDescription: state => state.description,
   }
 })

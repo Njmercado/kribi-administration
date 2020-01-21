@@ -1,0 +1,3 @@
+TODO:
+    Components:
+        + Crear componente para poder visualizar las palabras más buscadas tanto en españon como el palenque

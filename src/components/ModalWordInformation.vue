@@ -65,7 +65,7 @@
               color="blue darken-1"
               @click="createOrUpdateWord"
               rounded
-            >aceptar</v-btn>
+            >{{action=="create"?"crear":"actualizar"}}</v-btn>
           </v-col>
           <!-- Only gonna be able to see this,
               when 'action' is 'update'.
@@ -152,7 +152,23 @@ export default {
       if (this.action == "create") this.createWord();
     },
     updateWord() {
-      alert("La palabra será actualizada");
+      server
+        .updateWord(
+          this.wordAux,
+          this.definitionsAux,
+          this.examplesAux,
+          ""
+        )
+        .then(result => {
+          this.errorMsg = result.msg
+          this.typeMsg = 'success'
+          this.openError = !this.openError
+          this.realOpener = false
+        })
+        .catch(err => {
+          console.log("ERROR:")
+          console.log(err)
+        })
     },
     createWord() {
       server

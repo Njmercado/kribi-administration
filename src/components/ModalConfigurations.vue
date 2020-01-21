@@ -1,10 +1,6 @@
 <template>
   <div>
-
-    <v-dialog
-      v-model="opener"
-      width="32em"
-      >
+    <v-dialog v-model="opener" width="32em">
       <template v-slot:activator=" { on } ">
         <v-icon v-on="on"></v-icon>
       </template>
@@ -15,56 +11,34 @@
           :src="getImage"
           class="align-end"
           height="16em"
-          @click="changeImage"
-          >
-          <v-card-title class="name">
-            {{ getName }}
-          </v-card-title>
-        </v-img>
-        <v-card-text
-          class="text--primary"
-          style="margin-top: 3vh"
+          @click="editProfileHandler"
         >
-          <v-btn
-            style="margin-top: 1vh"
-            class="text-capitalize"
-            color="teal"
-            block
-            dark
-           >
-            <v-icon
-              small
-              style="margin-right: 1vw"
-            >mdi-lock</v-icon>
-            Cambiar Contraseña
-          </v-btn>
-          <v-btn
-            style="margin-top: 1vh"
-            class="text-capitalize"
-            color="teal"
-            block
-            dark
-            @click="showKeyGeneratorModal"
-          >
-            <v-icon
-              small
-              style="margin-right: 1vw"
-            >mdi-key</v-icon>
-              Generar Key
-          </v-btn>
-          <v-btn
-            style="margin-top: 1vh"
-            class="text-capitalize"
-            color="grey"
-            @click="openRecordsView"
-            block
-            dark
-          >
-            <v-icon
-              small
-              style="margin-right: 1vw"
-            >mdi-history</v-icon>
-              Historial
+          <v-card-title class="name">{{ getName }}</v-card-title>
+        </v-img>
+        <v-card-text class="text--primary" style="margin-top: 3vh">
+          <div v-if="!editProfile">
+            <v-btn style="margin-top: 1vh" class="text-capitalize" color="teal" block dark>
+              <v-icon style="margin-right: 1vw" small>mdi-lock</v-icon>Cambiar Contraseña
+            </v-btn>
+            <v-btn
+              style="margin-top: 1vh"
+              class="text-capitalize"
+              color="teal"
+              @click="showKeyGeneratorModal"
+              block
+              dark
+            >
+              <v-icon style="margin-right: 1vw" small>mdi-key</v-icon>Generar Key
+            </v-btn>
+            <v-btn
+              style="margin-top: 1vh"
+              class="text-capitalize"
+              color="grey"
+              @click="openRecordsView"
+              block
+              dark
+            >
+              <v-icon style="margin-right: 1vw" small>mdi-history</v-icon>Historial
             </v-btn>
             <v-btn
               style="margin-top: 1vh"
@@ -74,12 +48,25 @@
               block
               dark
             >
-              <v-icon
-                small
-                style="margin-right: 1vw"
-              >mdi-logout</v-icon>
-                Salir
+              <v-icon style="margin-right: 1vw" small>mdi-logout</v-icon>Salir
             </v-btn>
+          </div>
+          <div v-else>
+            <v-row justify="end" style="margin-top: -1em">
+              <v-btn color="teal" @click="editProfile = false" fab text small>
+                <v-icon>mdi-undo-variant</v-icon>
+              </v-btn>
+            </v-row>
+            <v-row>
+              <v-textarea
+                label="Description"
+                color="teal"
+                :value="getDescription"
+                filled
+              >
+              </v-textarea>
+            </v-row>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -90,59 +77,57 @@
 </template>
 
 <script>
-import  KeyGenerator from '../components/KeyGenerator.vue'
-import { mapMutations, mapGetters } from 'vuex'
-import server from '../controller/serverRequest.js' 
+import KeyGenerator from "../components/KeyGenerator.vue";
+import { mapMutations, mapGetters } from "vuex";
+import server from "../controller/serverRequest.js";
 
 export default {
-
   name: "ModalConfigurations",
   data: () => ({
     opener: false,
-    openCloseKeyGeneratorModal: false
+    openCloseKeyGeneratorModal: false,
+    editProfile: false,
   }),
-  props: [
-    "open"
-  ],
+  props: ["open"],
   watch: {
-    open: function(){
-      this.opener = true
+    open: function() {
+      this.opener = true;
     }
   },
-  methods:{
-    ...mapMutations(['setToken']),
-    showKeyGeneratorModal(){
-      this.openCloseKeyGeneratorModal = !this.openCloseKeyGeneratorModal
+  methods: {
+    ...mapMutations(["setToken"]),
+    showKeyGeneratorModal() {
+      this.openCloseKeyGeneratorModal = !this.openCloseKeyGeneratorModal;
     },
-    openRecordsView(){
-      this.$router.push("/records")
+    openRecordsView() {
+      this.$router.push("/records");
     },
     logout() {
-      this.setToken('')
-      this.$router.push('/')
+      this.setToken("");
+      this.$router.push("/");
     },
-    changeImage() {
-      server.getInfo(this.getEmail, this.getToken) 
+    editProfileHandler() {
+      this.editProfile = true 
+      server.getInfo(this.getEmail, this.getToken);
     }
   },
   computed: {
-    ...mapGetters(['getToken', 'getEmail', 'getName', 'getImage'])
+    ...mapGetters(["getToken", "getEmail", "getName", "getImage", "getDescription"])
   },
-  components:{
+  components: {
     KeyGenerator
   }
-}
+};
 </script>
 
 <style>
-
-.name{
+.name {
   color: white;
   background-color: teal;
   width: auto;
   margin: 0 11vw 1vw 1vw;
-  padding: .3vw;
+  padding: 0.3vw;
   border-radius: 5px;
-  font-size: .9em
+  font-size: 0.9em;
 }
 </style>

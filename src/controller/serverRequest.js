@@ -29,18 +29,17 @@ class serverRequest {
   static register(name, email, password, registeredEmail, code) {
 
     const uri = `${serverUri}/register/user`
-    const params = {
-      email: email,
-      name: name,
-      password: password,
-      registeredEmail: registeredEmail,
-      code: code
-    }
     
     return axios({
       method: 'post',
       url: uri,
-      params: params,
+      params: {
+        email: email,
+        name: name,
+        password: password,
+        registeredEmail: registeredEmail,
+        code: code
+      },
       headers: {
         'x-authorization-server': 'Basic ' + serverKey
       }
@@ -160,6 +159,51 @@ class serverRequest {
       return result.data
     }).catch(err => {
       return err.response.data
+    })
+  }
+
+  static updateWord(word, definitions, examples, token) {
+
+    const uri = `${serverUri}/word`
+
+    return axios({
+      method: 'put',
+      url: uri,
+      params:{
+        word: word,
+        definitions: definitions,
+        examples: examples
+      },
+      headers:{
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data
+    }).catch(err => {
+      throw err.response.data
+    })
+  }
+
+  static createHash(email, password, token) {
+
+    const uri = `${serverUri}/user/hash`
+
+    return axios({
+      method: 'get',
+      url: uri,
+      params:{
+        email: email,
+        password: password
+      },
+      headers:{
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data
+    }).catch(err => {
+      throw err.response.data
     })
   }
 }

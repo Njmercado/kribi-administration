@@ -46,11 +46,13 @@
         </v-text-field>
       </v-col>
     </v-row>
+
+    <!-- Words list searched by user -->
     <v-row justify="center" style="margin-top: 3vh">
       <v-col
         v-for="(word, index) in words"
         :key="index"
-        cols="12" xlg="auto" lg="auto" md="auto" sm="12" xs="12"
+        cols="12" xl="auto" lg="auto" md="auto" sm="12" xs="12"
         @click="findWordInfo(word, index)"
       >
         <Word :word="word"></Word>
@@ -58,7 +60,6 @@
     </v-row>
 
     <!-- Dialog callers -->
-
     <ModalConfigurations
       :open="openCloseConfigurationModal"
       >
