@@ -62,6 +62,11 @@
     <!-- Dialog callers -->
     <ModalConfigurations
       :open="openCloseConfigurationModal"
+      :email="getEmail"
+      :name="getName"
+      :description="getDescription"
+      :token="getToken"
+      :image="getImage"
       >
     </ModalConfigurations>
     <!-- <SideBarSettings :open="openCloseConfigurationModal"> -->
@@ -86,6 +91,7 @@ import Word from '../components/Word.vue'
 import ModalConfigurations from '../components/ModalConfigurations.vue'
 import ModalWordInformation from '../components/ModalWordInformation.vue'
 import request from '../controller/serverRequest'
+import {mapGetters} from 'vuex'
 
 export default {
 
@@ -137,6 +143,9 @@ export default {
         console.log(err)
       })
     }
+  },
+  computed: {
+    ...mapGetters(['getToken', 'getImage', 'getDescription', 'getName', "getEmail"])
   },
   components:{
     Word,

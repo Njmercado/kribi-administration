@@ -148,7 +148,7 @@ import { mapMutations } from 'vuex'
       openError: false
     }),
     methods:{
-      ...mapMutations(['setToken', 'setEmail', 'setName', 'setImage']),
+      ...mapMutations(['setToken', 'setEmail', 'setName', 'setImage', 'setDescription']),
       verifyData(){
         const response = serverRequest.login(this.email, this.password)
         response.then(res => {
@@ -161,6 +161,7 @@ import { mapMutations } from 'vuex'
             this.setEmail(res.data.data[0]._id)
             this.setName(res.data.data[0].nombre)
             this.setImage(res.data.data[0].imagen)
+            this.setDescription(res.data.data[0].descripcion)
             
             this.openPrincipalView()
           } 

@@ -206,6 +206,28 @@ class serverRequest {
       throw err.response.data
     })
   }
+
+  static updateUserDescription(email, description, token) {
+
+    const uri = `${serverUri}/user/description`
+
+    return axios({
+      method: 'post',
+      url: uri,
+      params:{
+        email: email,
+        description: description
+      },
+      headers:{
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data
+    }).catch(err => {
+      throw err.response.data
+    })
+  }
 }
 
 export default serverRequest

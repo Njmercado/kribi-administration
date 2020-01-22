@@ -1,24 +1,8 @@
 Modificaciones:
-  Generales:
-  Views: 
-    * Dashboard:
-      - Eliminados los botones para seleccionar el idioma con el cual se vaya a trabajar
   Componentes:
     ModalConfigurations:
       - Eliminado campo para cambio de correo --> innecesario.
-    ModalWordInformation:
-      + Ya se pueden crear las palabras.
-      + Se indica el idioma al cual la palabra buscada pertenece
-    ModalError:
-      - Eliminado
-      + Ha sido cambiado por ModalStatus, el cual no me muestra un modal si no una notificación 
-    KeyModal:
-      + Ya genera keys.
-      + Una vez se presiona sobre el código generado este se copiará al clipboard
   Requests:
-    CreateWord:
-      + Creado este request para poder crear palabras, dependiendo de la escogencia tomada, paleque o español
-    DeleteWord:
-      + Este request ahora me funciona para poder eliminar las palabras que has sido seleccionadas por el usuario
-    UpdateWord:
-      + Este request ahora me funciona para poder actualizar las palabras que has sido seleccionadas por el usuario
+    UpdateUserDescription:
+      + El usuario ahora es capaz de poder actualizar/agregar su descripcion
+  

@@ -8,12 +8,12 @@
       <v-card>
         <v-img
           style="background-color: grey"
-          :src="getImage"
+          :src="image"
           class="align-end"
           height="16em"
           @click="editProfileHandler"
         >
-          <v-card-title class="name">{{ getName }}</v-card-title>
+          <v-card-title class="name">{{ name }}</v-card-title>
         </v-img>
         <v-card-text class="text--primary" style="margin-top: 3vh">
           <div v-if="!editProfile">
@@ -61,10 +61,13 @@
               <v-textarea
                 label="Description"
                 color="teal"
-                :value="getDescription"
+                v-model="descriptionAux"
                 filled
               >
               </v-textarea>
+            </v-row>
+            <v-row justify="end">
+              <v-btn @click="updateUserDescription" color="teal" small dark>actualizar</v-btn>
             </v-row>
           </div>
         </v-card-text>
@@ -78,7 +81,7 @@
 
 <script>
 import KeyGenerator from "../components/KeyGenerator.vue";
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations } from "vuex";
 import server from "../controller/serverRequest.js";
 
 export default {
@@ -87,12 +90,16 @@ export default {
     opener: false,
     openCloseKeyGeneratorModal: false,
     editProfile: false,
+    descriptionAux: ''
   }),
-  props: ["open"],
+  props: ["open", "email", "name", "description", "token", "image"],
   watch: {
     open: function() {
       this.opener = true;
-    }
+    },
+  },
+  mounted(){
+    this.descriptionAux = this.description
   },
   methods: {
     ...mapMutations(["setToken"]),
@@ -108,11 +115,18 @@ export default {
     },
     editProfileHandler() {
       this.editProfile = true 
-      server.getInfo(this.getEmail, this.getToken);
+      // server.getInfo(this.email, this.token);
+    },
+    updateUserDescription() {
+      console.log("dentro")
+      server.updateUserDescription(this.email, this.descriptionAux, this.token)
+      .then(result => {
+        console.log(result)
+      })
+      .catch(err => {
+        console.log(err)
+      })
     }
-  },
-  computed: {
-    ...mapGetters(["getToken", "getEmail", "getName", "getImage", "getDescription"])
   },
   components: {
     KeyGenerator

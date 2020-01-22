@@ -1,3 +1,4 @@
 TODO:
     Components:
         + Crear componente para poder visualizar las palabras más buscadas tanto en españon como el palenque
+        + Crear el modal para poder subir los articulos que el usuario desee

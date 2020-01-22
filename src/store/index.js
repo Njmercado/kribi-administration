@@ -23,7 +23,10 @@ export default new Vuex.Store({
     },
     setImage(state, image) {
       state.image = image 
-    }
+    },
+    setDescription(state, description) {
+      state.description = description 
+    },
   },
   actions: {
   },
