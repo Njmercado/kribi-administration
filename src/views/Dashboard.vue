@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-row justify="start">
       <v-speed-dial
+        style="margin-top: -1em"
         direction="right"
         transition="fade-transition"
         top left
@@ -24,7 +25,7 @@
           @click="showWordInformationModal('create')"
           small fab dark
         >
-          <v-icon>mdi-file-word-box</v-icon>
+          <v-icon>mdi-alpha-w</v-icon>
         </v-btn>
         <v-btn
           color="#8c3420"
@@ -34,6 +35,22 @@
           <v-icon>mdi-file-document-outline</v-icon>
         </v-btn>
       </v-speed-dial>
+
+      <v-spacer></v-spacer>
+
+      <!-- Top Words-->
+      <v-btn 
+        style="margin-right: 1em"
+        color="teal"
+        @click="openTopWordsSideBarHandler"
+        fab dark
+      >
+        <v-icon large>
+          mdi-numeric-10
+        </v-icon>
+      </v-btn>
+      <!---->
+
     </v-row>
     <v-row justify="center" style="margin-top: 5vh">
       <v-col cols="12" md="3" lg="3" xl="3" xs="12" sm="8">
@@ -69,8 +86,6 @@
       :image="getImage"
       >
     </ModalConfigurations>
-    <!-- <SideBarSettings :open="openCloseConfigurationModal"> -->
-    <!-- </SideBarSettings> -->
     <ModalWordInformation
       :open="openCloseWordInformationModal"
       :action="modalWordInformationAction"
@@ -82,6 +97,12 @@
       @wordDeleted = "wordDeletedHandler"
     >
     </ModalWordInformation>
+    <TopWords
+      :open="openTopWordsSideBar"
+      :palenque="topPalenqueWords"
+      :espanol="topEspanolWords"
+    >
+    </TopWords>
   </v-container>
 </template>
 
@@ -90,6 +111,7 @@
 import Word from '../components/Word.vue'
 import ModalConfigurations from '../components/ModalConfigurations.vue'
 import ModalWordInformation from '../components/ModalWordInformation.vue'
+import TopWords from '../components/TopWordsSideBar.vue'
 import request from '../controller/serverRequest'
 import {mapGetters} from 'vuex'
 
@@ -100,13 +122,16 @@ export default {
     words: [],
     openCloseConfigurationModal: false,
     openCloseWordInformationModal: false,
+    openTopWordsSideBar: false,
     modalWordInformationAction: "update",
     wordToFind: '', // this variable is different to foundWord, because this is used to autocomplete
     foundWord: '', // and this is used to get the word when user click on one
     definitionFoundWord: [],
     examplesFoundWord: '',
     wordLanguage: '',
-    wordIndex: ''
+    wordIndex: '',
+    topPalenqueWords: [],
+    topEspanolWords: [],
   }),
   methods:{
     showConfigurationModal(){
@@ -131,6 +156,25 @@ export default {
     },
     wordDeletedHandler(index){
       this.words.splice(index, 1) // Delete deleted word from found words
+    },
+    openTopWordsSideBarHandler(){
+
+      if(this.topEspanolWords.length == 0){// Solo va a realizar la busqueda una sola vez
+
+        request
+          .getTopWords(this.getToken)
+          .then(result => {
+  
+            this.topPalenqueWords = result.palenque
+            this.topEspanolWords = result.espanol
+            this.openTopWordsSideBar = !this.openTopWordsSideBar
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      } else {
+        this.openTopWordsSideBar = !this.openTopWordsSideBar
+      }
     }
   },
   watch:{
@@ -151,6 +195,7 @@ export default {
     Word,
     ModalConfigurations,
     ModalWordInformation,
+    TopWords
   }
 }
 </script>

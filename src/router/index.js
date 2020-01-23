@@ -33,8 +33,8 @@ const routes = [
       if(token.length != 0)
         return import('../views/Dashboard.vue')
       else
-        router.push("/")
-        // return import('../views/Dashboard.vue')
+        // router.push("/")
+        return import('../views/Dashboard.vue')
     }
   },
   {

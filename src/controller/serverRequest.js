@@ -100,6 +100,7 @@ class serverRequest {
   static getWordInfo(word, token) {
 
     const uri =  `${serverUri}/word/info`
+    console.log("result: "+word)
 
     return axios({
       method: 'get',
@@ -227,6 +228,29 @@ class serverRequest {
     }).catch(err => {
       throw err.response.data
     })
+  }
+
+  static getTopWords(token) {
+
+    const uri = `${serverUri}/word/top`
+    const top = 5
+
+    return axios({
+      method: 'get',
+      url: uri,
+      params:{
+        top: top
+      },
+      headers:{
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data
+    }).catch(err => {
+      throw err.response.data
+    })
+
   }
 }
 

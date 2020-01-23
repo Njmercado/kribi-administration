@@ -1,8 +1,9 @@
 Modificaciones:
   Componentes:
-    ModalConfigurations:
-      - Eliminado campo para cambio de correo --> innecesario.
+    TopWordsSideBar:  
+      + Creado este componente para poder mostrar las palabras más buscadas.
+      + Una vez se presione sobre alguna palabra, de las que aparece en la lista, se desplegará el ModalWordInformation para mostrar toda la info o realizar configuraciones sobre ella.
   Requests:
-    UpdateUserDescription:
-      + El usuario ahora es capaz de poder actualizar/agregar su descripcion
+    getTopWords:
+      + Me permite obtener el top n de palabras buscadas, tanto en Español como en Palenque
   
