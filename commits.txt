@@ -1,8 +1,16 @@
 Modificaciones:
   Componentes:
     TopWordsSideBar:  
-      + Creado este componente para poder mostrar las palabras más buscadas.
-      + Una vez se presione sobre alguna palabra, de las que aparece en la lista, se desplegará el ModalWordInformation para mostrar toda la info o realizar configuraciones sobre ella.
+      - Eliminado.
+      + Este componente ha sido cambiado por un Modal, ya que permite ver la información un poco más detallada
+      + Este comoponente ahora se llama ModalTopWords
+    Options:
+      + Componente creado.
+      + Este componente me permite poder manejar configuraciones, especificas, para poder tene control de los procesos.
+      + Este componente nace de reducir código en la vista del dashboard.
+    Articles:
+      + Componente creado.
+      + Este componente permite porder visualizar todos los articulos que el usuario este buscando en el momento.
   Requests:
     getTopWords:
       + Me permite obtener el top n de palabras buscadas, tanto en Español como en Palenque

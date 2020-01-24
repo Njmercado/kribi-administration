@@ -252,6 +252,29 @@ class serverRequest {
     })
 
   }
+
+  static createArticle(author, link, title, token) {
+
+    const uri = `${serverUri}/article`
+
+    return axios({
+      method: 'post',
+      url: uri,
+      params:{
+        author: author,
+        link: link,
+        title: title
+      },
+      headers:{
+        'authorization': 'Bearer ' + token,
+        'x-authorization-server': 'Basic ' + serverKey
+      }
+    }).then(result => {
+      return result.data
+    }).catch(err => {
+      throw err.response.data
+    })
+  }
 }
 
 export default serverRequest
