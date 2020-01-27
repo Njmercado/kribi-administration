@@ -17,43 +17,47 @@
           </v-row>
           <v-row justify="center" align="center">
             <v-col cols="12" xs="12" sm="12" md="6" lg="6" xl="6">
-              <v-card>
+              <v-card color="grey lighten-2">
                 <v-card-title>
                   <label style="color: grey; margin-left:auto; margin-right:auto">Español</label>
                 </v-card-title>
-                <v-card-text style="overflow-y: scroll; max-height: 25em; padding: 1em">
-                  <div
-                    v-for="(word, index) in espanol"
-                    :key="index"
-                    @click.stop="openWordInfoModalHandler(word._id)"
-                    >
-                    <Word
-                      :word="word._id"
-                      :popularity="word.popularidad"
-                      size="13"
+                <v-card-text> 
+                  <div class="overflow round custom--scroll" style="max-height: 25em">
+                    <div
+                      v-for="(word, index) in espanol"
+                      :key="index"
+                      @click.stop="openWordInfoModalHandler(word._id)"
                       >
-                    </Word>
+                      <Word
+                        :word="word._id"
+                        :popularity="word.popularidad"
+                        size="13"
+                        >
+                      </Word>
+                    </div>
                   </div>
                 </v-card-text>
               </v-card>
             </v-col>
             <v-col cols="12" xs="12" sm="12" md="6" lg="6" xl="6">
-              <v-card>
+              <v-card color="grey lighten-2">
                 <v-card-title>
                   <label style="color: grey; margin-left:auto; margin-right:auto">Palenque</label>
                 </v-card-title>
-                <v-card-text style="overflow-y: scroll; max-height: 25em; padding: 1em">
-                  <div
-                    v-for="(word, index) in palenque"
-                    :key="index"
-                    @click.stop="openWordInfoModalHandler(word._id)"
+                <v-card-text>
+                  <div class="overflow round custom--scroll" style="max-height: 25em">
+                    <div
+                      v-for="(word, index) in palenque"
+                      :key="index"
+                      @click.stop="openWordInfoModalHandler(word._id)"
                     >
-                    <Word
-                      :word="word._id"
-                      :popularity="word.popularidad"
-                      size="13"
-                      >
-                    </Word>
+                      <Word
+                        :word="word._id"
+                        :popularity="word.popularidad"
+                        size="13"
+                        >
+                      </Word>
+                    </div>
                   </div>
                 </v-card-text>
               </v-card>
@@ -102,7 +106,7 @@ export default {
   methods:{
     openWordInfoModalHandler(word){
       request
-        .getWordInfo(word, '')
+        .getWordInfo(word, this.getToken)
         .then(result => {
           this.languageAux = result.idioma
           this.wordAux = word
@@ -124,3 +128,27 @@ export default {
   }
 }
 </script>
+
+<style>
+
+.overflow {
+  overflow-y: scroll
+}
+.custom--scroll::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 16px
+}
+.custom--scroll::-webkit-scrollbar-track {
+  border-radius: 16px
+}
+.custom--scroll::-webkit-scrollbar-thumb {
+  background: lightgrey; 
+}
+.custom--scroll::-webkit-scrollbar-thumb:hover {
+  background: grey; 
+}
+
+.round {
+  border-radius: 8px;
+}
+</style>

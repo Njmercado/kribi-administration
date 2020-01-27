@@ -1,17 +1,17 @@
 Modificaciones:
   Componentes:
-    TopWordsSideBar:  
-      - Eliminado.
-      + Este componente ha sido cambiado por un Modal, ya que permite ver la información un poco más detallada
-      + Este comoponente ahora se llama ModalTopWords
-    Options:
-      + Componente creado.
-      + Este componente me permite poder manejar configuraciones, especificas, para poder tene control de los procesos.
-      + Este componente nace de reducir código en la vista del dashboard.
-    Articles:
-      + Componente creado.
-      + Este componente permite porder visualizar todos los articulos que el usuario este buscando en el momento.
+    modalArticles:
+      + Ahora se puede seleccionar la foto del articulo a ser creado
+      + La foto seleccionada ahora se puede ver en el top del modal, desde ahí se escoge la foto
+      + Creada la funcion para poder convertir la imagen en un String de Base64 y poder ser enviada al request correspondiente(createArticle)
+      + Ahora se puede cambiar la foto del profile
+    modalTopWords:
+      + Las card ahora se ven un poco mejor, ya que se ha cambiado el estilo del scrollbar
   Requests:
-    getTopWords:
-      + Me permite obtener el top n de palabras buscadas, tanto en Español como en Palenque
+    createArticle:  
+      + Creado este request para poder crear los articulos que el usuario desee
+      + Para poder realizar el traspaso de la imagen al servidor, esta se convierte a Base64 y despues se envia
+    getArticles:
+      - Cambiada la ruta del servidor(get articles) ya que esta ya no existe.
+      + La ruta nueva es "get articles/autocompletion" ya que se va a usar la ruta de get, normal, para obtener la info completa del articulo
   

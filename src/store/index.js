@@ -1,7 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VuexPersist from 'vuex-persist'
 
 Vue.use(Vuex)
+
+const vuexLocalStorage = new VuexPersist({
+  key: 'vuex',
+  storage: window.localStorage,
+})
 
 export default new Vuex.Store({
   state: {
@@ -38,5 +44,6 @@ export default new Vuex.Store({
     getName: state => state.name,
     getImage: state => state.image,
     getDescription: state => state.description,
-  }
+  },
+  plugins: [vuexLocalStorage.plugin]
 })

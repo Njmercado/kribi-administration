@@ -33,14 +33,20 @@ const routes = [
       if(token.length != 0)
         return import('../views/Dashboard.vue')
       else
-        // router.push("/")
-        return import('../views/Dashboard.vue')
+        router.push("/")
+        // return import('../views/Dashboard.vue')
     }
   },
   {
     path: '/records',
     name: 'records',
-    component: () => import('../views/Records.vue')
+    component: () => {
+     const token = store.getters.getToken
+      if(token.length != 0)
+        return import('../views/Records.vue')
+      else
+        router.push("/")
+    }
   },
 ]
 

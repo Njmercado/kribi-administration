@@ -1,10 +1,6 @@
 <template>
   <div>
     <v-dialog v-model="opener" width="32em">
-      <template v-slot:activator=" { on } ">
-        <v-icon v-on="on"></v-icon>
-      </template>
-
       <v-card>
         <v-img
           style="background-color: grey"
@@ -25,8 +21,7 @@
               class="text-capitalize"
               color="teal"
               @click="showKeyGeneratorModal"
-              block
-              dark
+              block dark
             >
               <v-icon style="margin-right: 1vw" small>mdi-key</v-icon>Generar Key
             </v-btn>
@@ -35,8 +30,7 @@
               class="text-capitalize"
               color="grey"
               @click="openRecordsView"
-              block
-              dark
+              block dark
             >
               <v-icon style="margin-right: 1vw" small>mdi-history</v-icon>Historial
             </v-btn>
@@ -45,17 +39,23 @@
               class="text-capitalize"
               color="#8c3420"
               @click="logout"
-              block
-              dark
+              block dark
             >
               <v-icon style="margin-right: 1vw" small>mdi-logout</v-icon>Salir
             </v-btn>
           </div>
+          <!-- If user press over profile image then it gonna trigger user profile configurations. This -->
           <div v-else>
             <v-row justify="end" style="margin-top: -1em">
               <v-btn color="teal" @click="editProfile = false" fab text small>
                 <v-icon>mdi-undo-variant</v-icon>
               </v-btn>
+            </v-row>
+            <v-row justify="center" align="center" style="margin-bottom: 1em">
+              <v-btn class="text-capitalize" color="teal" @click="openFileSelector" dark>
+                cambiar imagen
+              </v-btn>
+              <input type="file" ref="file" hidden @change="handleSelectedFile">
             </v-row>
             <v-row>
               <v-textarea
@@ -67,7 +67,7 @@
               </v-textarea>
             </v-row>
             <v-row justify="end">
-              <v-btn @click="updateUserDescription" color="teal" small dark>actualizar</v-btn>
+              <v-btn class="text-capitalize" @click="updateUserDescription" color="teal" small dark>actualizar</v-btn>
             </v-row>
           </div>
         </v-card-text>
@@ -76,6 +76,7 @@
 
     <!-- Modal callers -->
     <KeyGenerator :open="openCloseKeyGeneratorModal"></KeyGenerator>
+    <Status :open="openStatus" :content="statusMsg" :type="statusType"></Status>
   </div>
 </template>
 
@@ -83,6 +84,7 @@
 import KeyGenerator from "../components/KeyGenerator.vue";
 import { mapMutations } from "vuex";
 import server from "../controller/serverRequest.js";
+import Status from '../components/ModalStatus.vue'
 
 export default {
   name: "ModalConfigurations",
@@ -90,7 +92,11 @@ export default {
     opener: false,
     openCloseKeyGeneratorModal: false,
     editProfile: false,
-    descriptionAux: ''
+    descriptionAux: '',
+    openStatus: false,
+    statusMsg: '',
+    statusType: 'error',
+    profileImageAsBase64Data: ''
   }),
   props: ["open", "email", "name", "description", "token", "image"],
   watch: {
@@ -102,7 +108,7 @@ export default {
     this.descriptionAux = this.description
   },
   methods: {
-    ...mapMutations(["setToken"]),
+    ...mapMutations(["setToken", "setDescription"]),
     showKeyGeneratorModal() {
       this.openCloseKeyGeneratorModal = !this.openCloseKeyGeneratorModal;
     },
@@ -118,18 +124,39 @@ export default {
       // server.getInfo(this.email, this.token);
     },
     updateUserDescription() {
-      console.log("dentro")
-      server.updateUserDescription(this.email, this.descriptionAux, this.token)
-      .then(result => {
-        console.log(result)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      server
+        .updateUserDescription(this.email, this.descriptionAux, this.token)
+        .then(result => {
+          this.setDescription(this.descriptionAux)
+          this.statusMsg = result
+          this.statusType = 'success'
+          this.openStatus = !this.openStatus
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    openFileSelector() {
+      this.$refs.file.click()
+    },
+    handleSelectedFile(value) {
+      function convertImageToBase64(image, callback) {
+        const file = new FileReader()
+
+        file.onload = function() {
+          callback(file.result)
+        }
+        file.readAsDataURL(image)
+      }
+      convertImageToBase64(value, this.setImageAsBase64Value)
+    },
+    setImageAsBase64Value(base64Image) {
+      this.setImageAsBase64Value = base64Image 
     }
   },
   components: {
-    KeyGenerator
+    KeyGenerator,
+    Status
   }
 };
 </script>

@@ -1,37 +1,38 @@
-const axios = require('axios')
-const serverUri = require('../controller/keys').serverURI
-const serverKey = require('../controller/keys').serverKey
+const axios = require("axios");
+const serverUri = require("../controller/keys").serverURI;
+const serverKey = require("../controller/keys").serverKey;
 
 class serverRequest {
-  static login(email, password){
-    const uri = `${serverUri}/login`
+  static login(email, password) {
+    const uri = `${serverUri}/login`;
     const params = {
-      email:email,
-      password:password
-    }
+      email: email,
+      password: password
+    };
     return axios({
-      method: 'get',
+      method: "get",
       url: uri,
       params: params,
       headers: {
-        'x-authorization-server': 'Basic ' + serverKey
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result
-    }).catch(err => {
-      return {
-        status: err.response.status,
-        msg: err.response.data
-      } 
     })
+      .then(result => {
+        return result;
+      })
+      .catch(err => {
+        return {
+          status: err.response.status,
+          msg: err.response.data
+        };
+      });
   }
 
   static register(name, email, password, registeredEmail, code) {
+    const uri = `${serverUri}/register/user`;
 
-    const uri = `${serverUri}/register/user`
-    
     return axios({
-      method: 'post',
+      method: "post",
       url: uri,
       params: {
         email: email,
@@ -41,240 +42,275 @@ class serverRequest {
         code: code
       },
       headers: {
-        'x-authorization-server': 'Basic ' + serverKey
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return {
-        status: result.status,
-        msg: result.data
-      } 
-    }).catch(err => {
-      return {
-        status: err.response.status, 
-        msg: err.response.data.msg
-      } 
     })
+      .then(result => {
+        return {
+          status: result.status,
+          msg: result.data
+        };
+      })
+      .catch(err => {
+        return {
+          status: err.response.status,
+          msg: err.response.data.msg
+        };
+      });
   }
 
-  static getInfo(email, token) {
-
-    const uri =  `${serverUri}/user/info`
+  static getUserInfo(email, token) {
+    const uri = `${serverUri}/user/info`;
     return axios({
-      method: 'get',
+      method: "get",
       url: uri,
       params: {
-        email: email,
+        email: email
       },
       headers: {
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server' : 'Basic ' + serverKey
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      console.log(result.data)
-    }).catch(err => {
-      console.log(err.response.msg)
     })
+      .then(result => {
+        console.log(result.data);
+      })
+      .catch(err => {
+        console.log(err.response.msg);
+      });
   }
 
   static getWord(word, token) {
-
-    const uri =  `${serverUri}/word`
+    const uri = `${serverUri}/word`;
 
     return axios({
-      method: 'get',
+      method: "get",
       url: uri,
       params: {
         word: word
       },
       headers: {
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server' : 'Basic ' + serverKey
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data.response
-    }).catch(err => {
-      return err.response
     })
+      .then(result => {
+        return result.data.response;
+      })
+      .catch(err => {
+        return err.response;
+      });
   }
 
   static getWordInfo(word, token) {
-
-    const uri =  `${serverUri}/word/info`
-    console.log("result: "+word)
+    const uri = `${serverUri}/word/info`;
 
     return axios({
-      method: 'get',
+      method: "get",
       url: uri,
       params: {
         word: word
       },
       headers: {
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server' : 'Basic ' + serverKey
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data
-    }).catch(err => {
-      return err.response
     })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        return err.response;
+      });
   }
 
   static createWord(word, definitions, examples, language, token) {
-    const uri = `${serverUri}/word`
+    const uri = `${serverUri}/word`;
 
     return axios({
-      method: 'post',
+      method: "post",
       url: uri,
-      params:{
+      params: {
         word: word,
         definitions: definitions,
         examples: examples,
-        language: language 
+        language: language
       },
-      headers:{
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server': 'Basic ' + serverKey
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data
-    }).catch(err => {
-      return err.response.data
     })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        return err.response.data;
+      });
   }
 
   static deleteWord(word, language, token) {
-    const uri = `${serverUri}/word`
+    const uri = `${serverUri}/word`;
 
     return axios({
-      method: 'delete',
+      method: "delete",
       url: uri,
-      params:{
+      params: {
         word: word,
-        language: language 
+        language: language
       },
-      headers:{
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server': 'Basic ' + serverKey
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data
-    }).catch(err => {
-      return err.response.data
     })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        return err.response.data;
+      });
   }
 
   static updateWord(word, definitions, examples, token) {
-
-    const uri = `${serverUri}/word`
+    const uri = `${serverUri}/word`;
 
     return axios({
-      method: 'put',
+      method: "put",
       url: uri,
-      params:{
+      params: {
         word: word,
         definitions: definitions,
         examples: examples
       },
-      headers:{
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server': 'Basic ' + serverKey
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data
-    }).catch(err => {
-      throw err.response.data
     })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
   }
 
   static createHash(email, password, token) {
-
-    const uri = `${serverUri}/user/hash`
+    const uri = `${serverUri}/user/hash`;
 
     return axios({
-      method: 'get',
+      method: "get",
       url: uri,
-      params:{
+      params: {
         email: email,
         password: password
       },
-      headers:{
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server': 'Basic ' + serverKey
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data
-    }).catch(err => {
-      throw err.response.data
     })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
   }
 
   static updateUserDescription(email, description, token) {
-
-    const uri = `${serverUri}/user/description`
+    const uri = `${serverUri}/user/description`;
 
     return axios({
-      method: 'post',
+      method: "post",
       url: uri,
-      params:{
+      params: {
         email: email,
         description: description
       },
-      headers:{
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server': 'Basic ' + serverKey
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data
-    }).catch(err => {
-      throw err.response.data
     })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
   }
 
   static getTopWords(token) {
-
-    const uri = `${serverUri}/word/top`
-    const top = 5
+    const uri = `${serverUri}/word/top`;
+    const top = 5;
 
     return axios({
-      method: 'get',
+      method: "get",
       url: uri,
-      params:{
+      params: {
         top: top
       },
-      headers:{
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server': 'Basic ' + serverKey
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data
-    }).catch(err => {
-      throw err.response.data
     })
-
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
   }
 
-  static createArticle(author, link, title, token) {
-
-    const uri = `${serverUri}/article`
+  static createArticle(author, link, title, photo, token) {
+    const uri = `${serverUri}/article`;
 
     return axios({
-      method: 'post',
+      method: "post",
       url: uri,
-      params:{
+      params: {
         author: author,
         link: link,
-        title: title
+        title: title,
+        photo: photo 
       },
-      headers:{
-        'authorization': 'Bearer ' + token,
-        'x-authorization-server': 'Basic ' + serverKey
+      headers: {
+        "authorization": "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
       }
-    }).then(result => {
-      return result.data
-    }).catch(err => {
-      throw err.response.data
     })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  }
+
+  static getArticles(articleTitle, token) {
+    const uri = `${serverUri}/article/autocompletion`;
+
+    return axios({
+      method: "get",
+      url: uri,
+      params: {
+        title: articleTitle
+      },
+      headers: {
+        "authorization": "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
+      }
+    })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
   }
 }
 
-export default serverRequest
+export default serverRequest;

@@ -2,22 +2,32 @@
   <v-container fluid>
     <v-row justify="end">
       <!-- This are options which user could select to manage especific information configurations -->
+      <!-- like add, delete or modify words. Also this contains those user configurations, like create a token, or something -->
       <Options></Options>
     </v-row>
-    <v-row justify="center" style="margin-top: 5vh">
-      <v-col cols="12" md="3" lg="3" xl="3" xs="12" sm="8">
+    <v-row justify="center" align="center">
+      <v-col cols="12" xs="12" sm="10" md="4" lg="4" xl="4">
         <v-text-field
-          v-model="wordToFind"
-          label="Buscar palabra"
+          v-model="searcher"
+          :label="searchWordsOrArticles?'Buscar articulo': 'Buscar palabra'"
           color="grey"
           rounded filled dense
           >
         </v-text-field>
       </v-col>
+      <v-col cols="12" xs="12" sm="2" md="3" lg="2" xl="2">
+        <v-switch
+          style="margin-right: auto; margin-left: auto"
+          :label="searchWordsOrArticles?'Articulos': 'Palabras'"
+          v-model="searchWordsOrArticles"
+          color="blue darken-1"
+        >
+        </v-switch>
+      </v-col>
     </v-row>
 
     <!-- Words list searched by user -->
-    <v-row justify="center" style="margin-top: 3vh">
+    <v-row justify="center" v-if="searchWordsOrArticles === false">
       <v-col
         v-for="(word, index) in words"
         :key="index"
@@ -25,6 +35,19 @@
         @click="findWordInfo(word, index)"
       >
         <Word :word="word"></Word>
+      </v-col>
+    </v-row>
+
+    <!-- Articles list searched by user -->
+    <v-row justify="center" v-if="searchWordsOrArticles === true">
+      <v-col
+        v-for="(article, index) in articles"
+        :key="index"
+        cols="12" xl="auto" lg="auto" md="auto" sm="12" xs="12"
+        align="center"
+        @click="findArticleInfo(article, index)"
+      >
+        <Article :author="article.author" :photo="article.photo" :link="article.link" :title="article.title"></Article>
       </v-col>
     </v-row>
 
@@ -45,6 +68,7 @@
 <script>
 
 import Word from '../components/Word.vue'
+import Article from '../components/Article.vue'
 import ModalWordInformation from '../components/ModalWordInformation.vue'
 import Options from '../components/Options.vue'
 import request from '../controller/serverRequest'
@@ -52,17 +76,19 @@ import {mapGetters} from 'vuex'
 
 export default {
 
-  name: "",
+  name: "Dashboard",
   data: () => ({
     words: [],
     openCloseWordInformationModal: false,
     modalWordInformationAction: "update",
-    wordToFind: '', // this variable is different to foundWord, because this is used to autocomplete
-    foundWord: '', // and this is used to get the word when user click on one
+    searcher: '', // this variable is different to foundWord, because this is used to autocomplete
+    foundWord: '', // and this is used to get the word information when user click on one
     definitionFoundWord: [],
     examplesFoundWord: '',
     wordLanguage: '',
     wordIndex: '',
+    searchWordsOrArticles: false,
+    articles: []
   }),
   methods:{
     showWordInformationModal(action, index){
@@ -71,30 +97,51 @@ export default {
       this.openCloseWordInformationModal = !this.openCloseWordInformationModal
     },
     findWordInfo(word, index){
-      request.getWordInfo(word)
-      .then(result => {
-        this.foundWord = result.palabra
-        this.definitionFoundWord = result.definicion.split("/")
-        this.examplesFoundWord = result.ejemplos
-        this.wordLanguage = result.idioma
-        this.showWordInformationModal('update', index)
-      }).catch(err => {
-        console.log(err)
-      })
+      request
+        .getWordInfo(word, this.getToken)
+          .then(result => {
+            this.foundWord = result.palabra
+            this.definitionFoundWord = result.definicion.split("/")
+            this.examplesFoundWord = result.ejemplos
+            this.wordLanguage = result.idioma
+            this.showWordInformationModal('update', index)
+          }).catch(err => {
+            console.log(err)
+          })
+    },
+    findArticleInfo(article, index) {
+      console.log(article)
+      console.log(index)
     },
     wordDeletedHandler(index){
       this.words.splice(index, 1) // Delete deleted word from found words
     },
-  },
-  watch:{
-    wordToFind(val) { // Each time user input on searcher field this
-      this.words = [] // gonna get trigger and search on server will be activated
-      request.getWord(val, '')
+    searchSomeWords(word) {
+      this.words = [] 
+      request.getWord(word, this.getToken)
       .then(result => {
         this.words = result
       }).catch(err => {
         console.log(err)
       })
+    },
+    searchSomeArticles(article) {
+      request
+        .getArticles(article, this.getToken)
+        .then(result => {
+          this.articles = result
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  watch:{
+    // Each time user input on searcher field this
+    // gonna get trigger and search on server will be activated
+    searcher(val) { 
+      if(this.searchWordsOrArticles === true) this.searchSomeArticles(val)
+      if(this.searchWordsOrArticles === false) this.searchSomeWords(val)
     }
   },
   computed: {
@@ -102,6 +149,7 @@ export default {
   },
   components:{
     Word,
+    Article,
     ModalWordInformation,
     Options,
   }

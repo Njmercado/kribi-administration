@@ -16,6 +16,7 @@
               style="margin-bottom: -4vh"
               label="Palabra"
               v-model="wordAux"
+              prepend-icon="mdi-file-word-box"
               rounded filled dense
             ></v-text-field>
           </v-col>
@@ -33,6 +34,7 @@
               style="margin-bottom: -4vh"
               label="Definicion"
               @keyup.enter="addDefinition"
+              prepend-icon="mdi-tooltip-text"
               rounded filled dense
             ></v-text-field>
           </v-col>
@@ -48,6 +50,7 @@
             <v-text-field 
               label="Ejemplo" 
               @keyup.enter="addExample" 
+              prepend-icon="mdi-lightbulb"
               rounded filled dense></v-text-field>
           </v-col>
           <v-switch 
@@ -99,6 +102,7 @@
 <script>
 import server from "../controller/serverRequest";
 import Status from "../components/ModalStatus";
+import {mapGetters} from 'vuex'
 
 export default {
   name: "ModalWordInformation",
@@ -157,7 +161,7 @@ export default {
           this.wordAux,
           this.definitionsAux,
           this.examplesAux,
-          ""
+          this.getToken
         )
         .then(result => {
           this.errorMsg = result.msg
@@ -177,10 +181,9 @@ export default {
           this.definitionsAux,
           this.examplesAux,
           this.languageAux,
-          ""
+          this.getToken
         )
         .then(result => {
-          console.log(result)
           if(result.err) {
             this.openError = !this.openError
             this.errorMsg = result.msg
@@ -207,6 +210,9 @@ export default {
         this.realOpener = false
       })
     }
+  },
+  computed: {
+    ...mapGetters(['getToken'])
   },
   components: {
     Status

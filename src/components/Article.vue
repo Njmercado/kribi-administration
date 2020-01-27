@@ -1,21 +1,27 @@
 <template>
-  <v-card>
+  <v-card color="#8c3420" dark>
     <v-img 
       :src="photo"
-      max-width="100"
-      max-height="100"
     >
     </v-img>
     <v-card-title>
       {{title}}
     </v-card-title>
-    <v-card-text>
-        {{author}} 
-    </v-card-text>
+    <v-card-subtitle>
+      {{author}} 
+    </v-card-subtitle>
     <v-card-actions>
-      <v-btn :href="link">
+      <v-spacer></v-spacer>
+      <v-btn 
+        class="text-lowercase" 
+        :href="link"
+        target="_blank"
+        color="teal"
+        small rounded
+      >
         ir
       </v-btn>
+      <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
 </template>

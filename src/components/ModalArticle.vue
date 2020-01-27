@@ -2,6 +2,7 @@
   <v-dialog 
     v-model="realOpener"
     width="38em"
+    persistent
   >
     <v-card color="teal" dark>
       <v-card-title>
@@ -9,10 +10,30 @@
       </v-card-title>
       <v-card-text>
         <v-row justify="center" align="center">
+          <v-avatar color="teal lighten-2" size="128" style="cursor: pointer" @click="openFilesSelector">
+            <v-img 
+              :src="imageAsBase64Data"
+            >
+            </v-img>
+          </v-avatar>
+        </v-row>
+        <v-row justify="center" align="center">
           <v-col cols="11">
             <v-text-field
-              label="autor"
+              label="Titulo"
+              v-model="title"
+              prepend-icon="mdi-tag-text"
+              rounded dense filled
+            >
+            </v-text-field>
+          </v-col>
+        </v-row>
+        <v-row justify="center" align="center">
+          <v-col cols="11">
+            <v-text-field
+              label="Autor"
               v-model="author"
+              prepend-icon="mdi-account-circle"
               rounded dense filled
             >
             </v-text-field>
@@ -21,18 +42,9 @@
         <v-row justify="center" align="center">
           <v-col cols="11">
             <v-text-field
-              label="link"
+              label="Link"
               v-model="link"
-              rounded dense filled
-            >
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row justify="center" align="center">
-          <v-col cols="11">
-            <v-text-field
-              label="link foto"
-              v-model="linkPhoto"
+              prepend-icon="mdi-link"
               rounded dense filled
             >
             </v-text-field>
@@ -49,20 +61,27 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <Status :open="openStatus" :content="statusMsg" :type="statusType"></Status>
+    <input type="file" ref="file" hidden @change="handleChosenFiles">
   </v-dialog>
 </template>
 
 <script>
 import request from '../controller/serverRequest.js'
 import {mapGetters} from 'vuex'
+import Status from '../components/ModalStatus.vue'
 
 export default {
   name: "ModalArticle",
   data: () => ({
     realOpener: false,
     link: '',
-    linkPhoto: '',
-    author: ''
+    author: '',
+    title: '',
+    openStatus: false,
+    statusMsg: '',
+    statusType: 'error',
+    imageAsBase64Data: '' 
   }),
   props: [
     "open"
@@ -70,24 +89,45 @@ export default {
   watch: {
     open(val){
       this.realOpener = val?val:true
-    }
+    },
   },
   methods:{
     createArticle() {
       request
-        .createArticle(this.author, this.link, this.title, this.getToken)
+        .createArticle(this.author, this.link, this.title, this.imageAsBase64Data, this.getToken)
         .then(result => {
-          console.log(result)
+          this.statusMsg = result.msg
+          this.statusType = "success"
+          this.openStatus = !this.openStatus
         })
         .catch(err => {
-          console.log(err)
+          this.statusMsg = err.msg
+          this.statusType = "error"
+          this.openStatus = !this.openStatus
         })
+    },
+    openFilesSelector() {
+      this.$refs.file.click()
+    },
+    handleChosenFiles(images) {
+      function handle(image, callback){
+        const file = new FileReader()
+        file.onload = function() {
+          callback(file.result)
+        }
+        file.readAsDataURL(image.srcElement.files[0])
+      }
+      handle(images, this.assignConvertedImageToVariable)
+    },
+    assignConvertedImageToVariable(result) {
+      this.imageAsBase64Data = result
     }
   },
   computed:{
     ...mapGetters(['getToken'])
   },
   components:{
+    Status
   }  
 } 
 </script>
