@@ -9,6 +9,10 @@ const routes = [
     path: '/',
     name: 'login',
     component: () => {
+      const token = store.getters.getToken
+      if(token.length != 0)
+        router.push('/dashboard')
+      else
         return import('../views/Login.vue')
     }
   },
@@ -34,7 +38,6 @@ const routes = [
         return import('../views/Dashboard.vue')
       else
         router.push("/")
-        // return import('../views/Dashboard.vue')
     }
   },
   {

@@ -4,7 +4,7 @@
       <v-card>
         <v-img
           style="background-color: grey"
-          :src="image"
+          :src="imageAux"
           class="align-end"
           height="16em"
           @click="editProfileHandler"
@@ -52,7 +52,7 @@
               </v-btn>
             </v-row>
             <v-row justify="center" align="center" style="margin-bottom: 1em">
-              <v-btn class="text-capitalize" color="teal" @click="openFileSelector" dark>
+              <v-btn class="text-capitalize" color="teal" @click="openFileSelector" dark small>
                 cambiar imagen
               </v-btn>
               <input type="file" ref="file" hidden @change="handleSelectedFile">
@@ -93,10 +93,10 @@ export default {
     openCloseKeyGeneratorModal: false,
     editProfile: false,
     descriptionAux: '',
+    imageAux: '',
     openStatus: false,
     statusMsg: '',
     statusType: 'error',
-    profileImageAsBase64Data: ''
   }),
   props: ["open", "email", "name", "description", "token", "image"],
   watch: {
@@ -106,9 +106,10 @@ export default {
   },
   mounted(){
     this.descriptionAux = this.description
+    this.imageAux = this.image
   },
   methods: {
-    ...mapMutations(["setToken", "setDescription"]),
+    ...mapMutations(["setToken", "setDescription", "setImage"]),
     showKeyGeneratorModal() {
       this.openCloseKeyGeneratorModal = !this.openCloseKeyGeneratorModal;
     },
@@ -139,19 +140,22 @@ export default {
     openFileSelector() {
       this.$refs.file.click()
     },
-    handleSelectedFile(value) {
-      function convertImageToBase64(image, callback) {
-        const file = new FileReader()
-
-        file.onload = function() {
-          callback(file.result)
-        }
-        file.readAsDataURL(image)
-      }
-      convertImageToBase64(value, this.setImageAsBase64Value)
+    handleSelectedFile(image) {
+      this.updateUserProfileImage(image.srcElement.files[0])
     },
-    setImageAsBase64Value(base64Image) {
-      this.setImageAsBase64Value = base64Image 
+    updateUserProfileImage(image) {
+      server
+        .updateUserProfileImage(this.email, image, this.token)
+        .then(result => {
+          this.imageAux = result.imageUrl
+          this.setImage(this.imageAux)
+          this.statusMsg = result.msg
+          this.statusType = 'success'
+          this.openStatus = !this.openStatus
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   components: {

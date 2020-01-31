@@ -1,4 +1,6 @@
 Modificaciones:
+  General:
+    + Instalado form-data para poder particionar los archivos que se envian desde acá y poder manejarlos bien en el servidor
   Componentes:
     modalArticles:
       + Ahora se puede seleccionar la foto del articulo a ser creado

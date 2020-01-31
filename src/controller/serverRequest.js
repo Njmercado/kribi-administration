@@ -1,6 +1,7 @@
 const axios = require("axios");
 const serverUri = require("../controller/keys").serverURI;
 const serverKey = require("../controller/keys").serverKey;
+const FormData = require('form-data') 
 
 class serverRequest {
   static login(email, password) {
@@ -223,7 +224,7 @@ class serverRequest {
     const uri = `${serverUri}/user/description`;
 
     return axios({
-      method: "post",
+      method: "put",
       url: uri,
       params: {
         email: email,
@@ -239,6 +240,28 @@ class serverRequest {
       })
       .catch(err => {
         throw err.response.data;
+      });
+  }
+
+  static updateUserProfileImage(email, image, token) {
+    const form = new FormData()
+    const uri = `${serverUri}/user/image`;
+
+    form.append('photo', image)
+    form.append('email', email)
+
+    return axios.put(uri, form, {
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey,
+        "Content-Type": "multipart/form-data; boundary=::"
+      }
+    })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        throw err;
       });
   }
 
@@ -266,22 +289,22 @@ class serverRequest {
   }
 
   static createArticle(author, link, title, photo, token) {
+    const form = new FormData() 
     const uri = `${serverUri}/article`;
 
-    return axios({
-      method: "post",
-      url: uri,
-      params: {
-        author: author,
-        link: link,
-        title: title,
-        photo: photo 
-      },
-      headers: {
-        "authorization": "Bearer " + token,
-        "x-authorization-server": "Basic " + serverKey
-      }
-    })
+    form.append('author', author)
+    form.append('link', link)
+    form.append('title', title)
+    form.append('photo', photo)
+
+    return axios
+      .post(uri, form, {
+        headers: {
+          authorization: "Bearer " + token,
+          "x-authorization-server": "Basic " + serverKey,
+          "Content-Type": "multipart/form-data; boundary=::"
+        }
+      })
       .then(result => {
         return result.data;
       })
@@ -300,7 +323,7 @@ class serverRequest {
         title: articleTitle
       },
       headers: {
-        "authorization": "Bearer " + token,
+        authorization: "Bearer " + token,
         "x-authorization-server": "Basic " + serverKey
       }
     })

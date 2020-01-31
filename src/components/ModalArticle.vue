@@ -1,5 +1,5 @@
 <template>
-  <v-dialog 
+  <v-dialog  
     v-model="realOpener"
     width="38em"
     persistent
@@ -12,7 +12,7 @@
         <v-row justify="center" align="center">
           <v-avatar color="teal lighten-2" size="128" style="cursor: pointer" @click="openFilesSelector">
             <v-img 
-              :src="imageAsBase64Data"
+              :src="articleImage"
             >
             </v-img>
           </v-avatar>
@@ -62,6 +62,7 @@
       </v-card-actions>
     </v-card>
     <Status :open="openStatus" :content="statusMsg" :type="statusType"></Status>
+    <!-- <input type="file" ref="file" hidden @change="handleChosenFiles"> -->
     <input type="file" ref="file" hidden @change="handleChosenFiles">
   </v-dialog>
 </template>
@@ -81,7 +82,7 @@ export default {
     openStatus: false,
     statusMsg: '',
     statusType: 'error',
-    imageAsBase64Data: '' 
+    articleImage: '' 
   }),
   props: [
     "open"
@@ -92,9 +93,9 @@ export default {
     },
   },
   methods:{
-    createArticle() {
+    createArticle(image) {
       request
-        .createArticle(this.author, this.link, this.title, this.imageAsBase64Data, this.getToken)
+        .createArticle(this.author, this.link, this.title, image, this.getToken)
         .then(result => {
           this.statusMsg = result.msg
           this.statusType = "success"
@@ -109,19 +110,9 @@ export default {
     openFilesSelector() {
       this.$refs.file.click()
     },
-    handleChosenFiles(images) {
-      function handle(image, callback){
-        const file = new FileReader()
-        file.onload = function() {
-          callback(file.result)
-        }
-        file.readAsDataURL(image.srcElement.files[0])
-      }
-      handle(images, this.assignConvertedImageToVariable)
+    handleChosenFiles(image) {
+      this.createArticle(image.srcElement.files[0])
     },
-    assignConvertedImageToVariable(result) {
-      this.imageAsBase64Data = result
-    }
   },
   computed:{
     ...mapGetters(['getToken'])
@@ -131,4 +122,3 @@ export default {
   }  
 } 
 </script>
-
