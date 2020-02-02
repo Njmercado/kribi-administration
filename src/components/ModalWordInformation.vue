@@ -195,13 +195,13 @@ export default {
     },
     deleteWord() {
 
-      server.deleteWord(this.word, this.languageAux, '')
+      server.deleteWord(this.word, this.languageAux, this.getToken)
       .then(result => {
         this.openError = !this.openError
         this.errorMsg = result
         this.typeMsg = 'success'
         this.realOpener = false
-        this.$emit('wordDeleted', this.wordIndex)
+        this.$emit('delete', this.wordIndex)
       })
       .catch(err => {
         this.openError = !this.openError

@@ -45,9 +45,9 @@
         :key="index"
         cols="12" xl="auto" lg="auto" md="auto" sm="12" xs="12"
         align="center"
-        @click="findArticleInfo(article, index)"
+        @click="openArticleInfo(article, index)"
       >
-        <Article :author="article.author" :photo="article.photo" :link="article.link" :title="article.title"></Article>
+        <Article :author="article.author" :photo="article.photo" :link="article.link" :title="article.title" :id="article._id"></Article>
       </v-col>
     </v-row>
 
@@ -59,9 +59,18 @@
       :examples="examplesFoundWord"
       :language="wordLanguage"
       :wordIndex="wordIndex"
-      @wordDeleted = "wordDeletedHandler"
+      @delete = "wordDeletedHandler"
     >
     </ModalWordInformation>
+
+    <ModalArticle
+      :open="openModalArticle"
+      action="update"
+      :articleData="articleData"
+      :index="currentArticleIndex"
+      @delete="articleDeleteHandler"
+    >
+    </ModalArticle>
   </v-container>
 </template>
 
@@ -69,6 +78,7 @@
 
 import Word from '../components/Word.vue'
 import Article from '../components/Article.vue'
+import ModalArticle from '../components/ModalArticle.vue'
 import ModalWordInformation from '../components/ModalWordInformation.vue'
 import Options from '../components/Options.vue'
 import request from '../controller/serverRequest'
@@ -80,6 +90,7 @@ export default {
   data: () => ({
     words: [],
     openCloseWordInformationModal: false,
+    openModalArticle: false,
     modalWordInformationAction: "update",
     searcher: '', // this variable is different to foundWord, because this is used to autocomplete
     foundWord: '', // and this is used to get the word information when user click on one
@@ -88,7 +99,9 @@ export default {
     wordLanguage: '',
     wordIndex: '',
     searchWordsOrArticles: false,
-    articles: []
+    articles: [],
+    articleData: {},
+    currentArticleIndex: -1,
   }),
   methods:{
     showWordInformationModal(action, index){
@@ -109,12 +122,16 @@ export default {
             console.log(err)
           })
     },
-    findArticleInfo(article, index) {
-      console.log(article)
-      console.log(index)
+    openArticleInfo(article, index) {
+      this.articleData = article
+      this.currentArticleIndex = index
+      this.openModalArticle = !this.openModalArticle
     },
     wordDeletedHandler(index){
       this.words.splice(index, 1) // Delete deleted word from found words
+    },
+    articleDeleteHandler(index){
+      this.articles.splice(index, 1)
     },
     searchSomeWords(word) {
       this.words = [] 
@@ -150,6 +167,7 @@ export default {
   components:{
     Word,
     Article,
+    ModalArticle,
     ModalWordInformation,
     Options,
   }

@@ -76,6 +76,7 @@
     </TopWords>
     <ModalArticle
       :open="openArticleModal"
+      action="create"
       >
     </ModalArticle>
   </div>

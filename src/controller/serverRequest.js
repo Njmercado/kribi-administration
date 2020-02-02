@@ -1,7 +1,7 @@
 const axios = require("axios");
 const serverUri = require("../controller/keys").serverURI;
 const serverKey = require("../controller/keys").serverKey;
-const FormData = require('form-data') 
+const FormData = require("form-data");
 
 class serverRequest {
   static login(email, password) {
@@ -243,20 +243,22 @@ class serverRequest {
       });
   }
 
-  static updateUserProfileImage(email, image, token) {
-    const form = new FormData()
+  static updateUserProfileImage(email, image, currentImage, token) {
+    const form = new FormData();
     const uri = `${serverUri}/user/image`;
 
-    form.append('photo', image)
-    form.append('email', email)
+    form.append("photo", image);
+    form.append("currentImage", currentImage);
+    form.append("email", email);
 
-    return axios.put(uri, form, {
-      headers: {
-        authorization: "Bearer " + token,
-        "x-authorization-server": "Basic " + serverKey,
-        "Content-Type": "multipart/form-data; boundary=::"
-      }
-    })
+    return axios
+      .put(uri, form, {
+        headers: {
+          authorization: "Bearer " + token,
+          "x-authorization-server": "Basic " + serverKey,
+          "Content-Type": "multipart/form-data; boundary=::"
+        }
+      })
       .then(result => {
         return result.data;
       })
@@ -289,13 +291,13 @@ class serverRequest {
   }
 
   static createArticle(author, link, title, photo, token) {
-    const form = new FormData() 
+    const form = new FormData();
     const uri = `${serverUri}/article`;
 
-    form.append('author', author)
-    form.append('link', link)
-    form.append('title', title)
-    form.append('photo', photo)
+    form.append("author", author);
+    form.append("link", link);
+    form.append("title", title);
+    form.append("photo", photo);
 
     return axios
       .post(uri, form, {
@@ -310,6 +312,56 @@ class serverRequest {
       })
       .catch(err => {
         throw err;
+      });
+  }
+
+  static deleteArticle(id, imageId, token) {
+    const uri = `${serverUri}/article`;
+
+    return axios({
+      method: "delete",
+      url: uri,
+      params: {
+        id,
+        imageId
+      },
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey
+      }
+    })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        console.log(err);
+        return err.response.data;
+      });
+  }
+
+  static updateArticle(id, currentImage, image, title, link, author, token) {
+    const form = new FormData()
+    const uri = `${serverUri}/article`;
+
+    form.append('photo', image)
+    form.append('id', id)
+    form.append('currentImage', (typeof image) == "object"? currentImage: '')
+    form.append('title', title)
+    form.append('link', link)
+    form.append('author', author)
+
+    return axios.put( uri, form, {
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey,
+        "Content-Type": "multipart/form-data; boundary=::"
+      }
+    })
+      .then(result => {
+        return result.data;
+      })
+      .catch(err => {
+        return err.response.data;
       });
   }
 

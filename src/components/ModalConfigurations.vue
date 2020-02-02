@@ -143,9 +143,9 @@ export default {
     handleSelectedFile(image) {
       this.updateUserProfileImage(image.srcElement.files[0])
     },
-    updateUserProfileImage(image) {
+    updateUserProfileImage(chosenImage) {
       server
-        .updateUserProfileImage(this.email, image, this.token)
+        .updateUserProfileImage(this.email, chosenImage, this.imageAux, this.token)
         .then(result => {
           this.imageAux = result.imageUrl
           this.setImage(this.imageAux)

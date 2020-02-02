@@ -12,7 +12,7 @@
         <v-row justify="center" align="center">
           <v-avatar color="teal lighten-2" size="128" style="cursor: pointer" @click="openFilesSelector">
             <v-img 
-              :src="articleImage"
+              :src="imageAsBase64"
             >
             </v-img>
           </v-avatar>
@@ -53,8 +53,11 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="text-lowercase" color="blue darken-1" @click="createArticle" rounded>
-          agregar
+        <v-btn class="text-lowercase" color="blue darken-1" @click="handleAction" rounded>
+          {{ action === "create"? "crear": "actualizar" }}
+        </v-btn>
+        <v-btn v-if="action === 'update'" class="text-lowercase" color="warning" @click="deleteArticle" rounded>
+          Eliminar
         </v-btn>
         <v-btn class="text-lowercase" color="#8c3420" @click="realOpener = !realOpener" rounded>
           cancelar
@@ -79,27 +82,40 @@ export default {
     link: '',
     author: '',
     title: '',
+    id: '',
     openStatus: false,
     statusMsg: '',
     statusType: 'error',
-    articleImage: '' 
+    chosenArticleImage: '', // This is used to catch image chosen from user pc. Object
+    imageAsBase64: '', // This is used to show image. This is why is necesary convert it to base64
   }),
   props: [
-    "open"
+    "open",
+    "action",
+    "articleData",
+    "index"
   ],
   watch: {
     open(val){
       this.realOpener = val?val:true
     },
+    articleData(data) {
+      this.title = data.title
+      this.link = data.link
+      this.author = data.author
+      this.imageAsBase64 = data.photo
+      this.id = data._id
+    }
   },
   methods:{
-    createArticle(image) {
+    createArticle() {
       request
-        .createArticle(this.author, this.link, this.title, image, this.getToken)
+        .createArticle(this.author, this.link, this.title, this.chosenArticleImage, this.getToken)
         .then(result => {
           this.statusMsg = result.msg
           this.statusType = "success"
           this.openStatus = !this.openStatus
+          this.imageAsBase64 = result.imageUrl
         })
         .catch(err => {
           this.statusMsg = err.msg
@@ -107,12 +123,58 @@ export default {
           this.openStatus = !this.openStatus
         })
     },
+    deleteArticle(){
+      request
+        .deleteArticle(this.id, this.imageAsBase64, this.getToken)
+        .then(result => {
+          this.statusMsg = result.msg
+          this.statusType = "success"
+          this.openStatus = !this.openStatus
+          this.$emit("delete", this.index)
+        })
+        .catch(err => {
+          this.statusMsg = err.msg
+          this.statusType = "error"
+          this.openStatus = !this.openStatus
+        })
+    },
+    updateArticle() {
+      request
+        .updateArticle(this.id, this.articleData.photo, this.chosenArticleImage, this.title, this.link, this.author, this.getToken)
+        .then(result => {
+          this.statusMsg = result.msg
+          this.statusType = "success"
+          this.openStatus = !this.openStatus
+          this.chosenArticleImage = ''
+          this.imageAsBase64 = result.imageUrl
+        })
+        .catch(err => {
+          this.statusMsg = err.msg
+          this.statusType = "error"
+          this.openStatus = !this.openStatus
+        })
+    },
+    handleAction() {
+      if(this.action === "create") this.createArticle()
+      if(this.action === "update") this.updateArticle()
+    },
     openFilesSelector() {
       this.$refs.file.click()
     },
     handleChosenFiles(image) {
-      this.createArticle(image.srcElement.files[0])
+      this.chosenArticleImage = image.srcElement.files[0]
+      this.imageToBase64(this.chosenArticleImage, this.setImageAsBase64Value)
     },
+    setImageAsBase64Value(base64) {
+      this.imageAsBase64 = base64
+    },
+    imageToBase64(image, callback) {
+      const reader = new FileReader()
+      reader.onloadend = function() {
+        callback(reader.result)
+      }
+      reader.readAsDataURL(image)
+    }
   },
   computed:{
     ...mapGetters(['getToken'])

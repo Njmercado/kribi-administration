@@ -1,19 +1,13 @@
 Modificaciones:
-  General:
-    + Instalado form-data para poder particionar los archivos que se envian desde acá y poder manejarlos bien en el servidor
   Componentes:
     modalArticles:
-      + Ahora se puede seleccionar la foto del articulo a ser creado
-      + La foto seleccionada ahora se puede ver en el top del modal, desde ahí se escoge la foto
-      + Creada la funcion para poder convertir la imagen en un String de Base64 y poder ser enviada al request correspondiente(createArticle)
-      + Ahora se puede cambiar la foto del profile
-    modalTopWords:
-      + Las card ahora se ven un poco mejor, ya que se ha cambiado el estilo del scrollbar
+      + Agregada opcion para poder eliminar el articulo seleccionado
   Requests:
-    createArticle:  
-      + Creado este request para poder crear los articulos que el usuario desee
-      + Para poder realizar el traspaso de la imagen al servidor, esta se convierte a Base64 y despues se envia
-    getArticles:
-      - Cambiada la ruta del servidor(get articles) ya que esta ya no existe.
-      + La ruta nueva es "get articles/autocompletion" ya que se va a usar la ruta de get, normal, para obtener la info completa del articulo
+    updateArticle: 
+      + Creado este request para poder realizar cambios sobre los articulos seleccionados.
+      + Se pueden actualizar:
+        + Imagenes.
+        + Todo el contenido textual
+    deleteArticle:
+      + Request creado para poder eliminar los articulos que el usuario desee
   
