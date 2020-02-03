@@ -30,9 +30,6 @@
               <br>
               <br>
               <span>Para poder ingresar debe estar registrado con anterioridad.</span>
-              <br>
-              <br>
-              <span>Mucha suerte!!!!</span>
             </v-col>
           </v-row>
           <v-row 
@@ -63,6 +60,10 @@
           </v-row>
         </v-container>         
       </v-col>
+
+
+
+      <!-- Form Area -->
       <v-col cols="12" sm="12" xs="12" md="12" lg="7" xlg="7">
         <v-container>
           <v-row 
@@ -119,6 +120,7 @@
                     class="text-lowercase"
                     color="#CD982B"
                     @click="verifyData"
+                    :loading="processingLogin"
                     dark
                   >
                     ingresar
@@ -145,11 +147,13 @@ import { mapMutations } from 'vuex'
       email: '',
       password: '',
       errorMsg: '',
-      openError: false
+      openError: false,
+      processingLogin: false
     }),
     methods:{
       ...mapMutations(['setToken', 'setEmail', 'setName', 'setImage', 'setDescription']),
       verifyData(){
+        this.processingLogin = true
         const response = serverRequest.login(this.email, this.password)
         response.then(res => {
           if(res.status == 200){
@@ -158,16 +162,18 @@ import { mapMutations } from 'vuex'
             this.email = ''
 
             this.setToken(res.data.token)
-            this.setEmail(res.data.data[0]._id)
-            this.setName(res.data.data[0].nombre)
-            this.setImage(res.data.data[0].imagen)
-            this.setDescription(res.data.data[0].descripcion)
+            this.setEmail(res.data.data._id)
+            this.setName(res.data.data.nombre)
+            this.setImage(res.data.data.imagen)
+            this.setDescription(res.data.data.descripcion)
             
+            this.processingLogin = false
             this.openPrincipalView()
           } 
           else{
             this.openError = !this.openError
             this.errorMsg = res.msg
+            this.processingLogin = false
           } 
         })
       },

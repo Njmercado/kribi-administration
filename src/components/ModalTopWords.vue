@@ -5,7 +5,7 @@
       width="46em"
       height="auto"
     >
-      <v-card style="padding: 1em" color="teal">
+      <v-card style="padding: 1em; border-radius: 16px" color="teal">
         <v-container>
           <v-row justify="center" align="center">
             <label 
@@ -17,7 +17,7 @@
           </v-row>
           <v-row justify="center" align="center">
             <v-col cols="12" xs="12" sm="12" md="6" lg="6" xl="6">
-              <v-card color="grey lighten-2">
+              <v-card color="grey lighten-2" style="border-radius: 16px">
                 <v-card-title>
                   <label style="color: grey; margin-left:auto; margin-right:auto">Español</label>
                 </v-card-title>
@@ -40,7 +40,7 @@
               </v-card>
             </v-col>
             <v-col cols="12" xs="12" sm="12" md="6" lg="6" xl="6">
-              <v-card color="grey lighten-2">
+              <v-card color="grey lighten-2" style="border-radius: 16px">
                 <v-card-title>
                   <label style="color: grey; margin-left:auto; margin-right:auto">Palenque</label>
                 </v-card-title>

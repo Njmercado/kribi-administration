@@ -5,7 +5,7 @@
         <v-icon v-on="on"></v-icon>
       </template>
 
-      <v-card color="teal" dark>
+      <v-card style="border-radius: 16px" color="teal" dark>
         <v-card-title>
           <label style="margin-left: auto; margin-right: auto"> {{ languageAux }} </label>
         </v-card-title>
@@ -16,6 +16,7 @@
               style="margin-bottom: -4vh"
               label="Palabra"
               v-model="wordAux"
+              :readonly="action === 'create'? false: true"
               prepend-icon="mdi-file-word-box"
               rounded filled dense
             ></v-text-field>

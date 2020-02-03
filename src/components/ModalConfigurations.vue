@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="opener" width="32em">
-      <v-card>
+      <v-card style="border-radius: 16px">
         <v-img
           style="background-color: grey"
           :src="imageAux"
@@ -13,7 +13,7 @@
         </v-img>
         <v-card-text class="text--primary" style="margin-top: 3vh">
           <div v-if="!editProfile">
-            <v-btn style="margin-top: 1vh" class="text-capitalize" color="teal" block dark>
+            <v-btn style="margin-top: 1vh" class="text-capitalize" color="teal" @click="showChangePasswordModal" block dark>
               <v-icon style="margin-right: 1vw" small>mdi-lock</v-icon>Cambiar Contraseña
             </v-btn>
             <v-btn
@@ -52,7 +52,13 @@
               </v-btn>
             </v-row>
             <v-row justify="center" align="center" style="margin-bottom: 1em">
-              <v-btn class="text-capitalize" color="teal" @click="openFileSelector" dark small>
+              <v-btn 
+                class="text-capitalize" 
+                color="teal" 
+                @click="openFileSelector" 
+                :loding="processingImageRequest" 
+                dark small
+              >
                 cambiar imagen
               </v-btn>
               <input type="file" ref="file" hidden @change="handleSelectedFile">
@@ -67,7 +73,13 @@
               </v-textarea>
             </v-row>
             <v-row justify="end">
-              <v-btn class="text-capitalize" @click="updateUserDescription" color="teal" small dark>actualizar</v-btn>
+              <v-btn 
+                class="text-capitalize" 
+                @click="updateUserDescription" 
+                color="teal" 
+                :loading="processingDescriptionRequest" 
+                small dark
+              >actualizar</v-btn>
             </v-row>
           </div>
         </v-card-text>
@@ -77,11 +89,15 @@
     <!-- Modal callers -->
     <KeyGenerator :open="openCloseKeyGeneratorModal"></KeyGenerator>
     <Status :open="openStatus" :content="statusMsg" :type="statusType"></Status>
+    <ChangePassword
+      :open="openChangePasswordModal"
+    ></ChangePassword>
   </div>
 </template>
 
 <script>
 import KeyGenerator from "../components/KeyGenerator.vue";
+import ChangePassword from "../components/ModalChangePassword.vue";
 import { mapMutations } from "vuex";
 import server from "../controller/serverRequest.js";
 import Status from '../components/ModalStatus.vue'
@@ -91,12 +107,15 @@ export default {
   data: () => ({
     opener: false,
     openCloseKeyGeneratorModal: false,
+    openChangePasswordModal: false,
     editProfile: false,
     descriptionAux: '',
     imageAux: '',
     openStatus: false,
     statusMsg: '',
     statusType: 'error',
+    processingImageRequest: false,
+    processingDescriptionRequest: false,
   }),
   props: ["open", "email", "name", "description", "token", "image"],
   watch: {
@@ -113,6 +132,9 @@ export default {
     showKeyGeneratorModal() {
       this.openCloseKeyGeneratorModal = !this.openCloseKeyGeneratorModal;
     },
+    showChangePasswordModal() {
+      this.openChangePasswordModal = !this.openChangePasswordModal
+    },
     openRecordsView() {
       this.$router.push("/records");
     },
@@ -125,6 +147,7 @@ export default {
       // server.getInfo(this.email, this.token);
     },
     updateUserDescription() {
+      this.processingDescriptionRequest= true
       server
         .updateUserDescription(this.email, this.descriptionAux, this.token)
         .then(result => {
@@ -132,9 +155,11 @@ export default {
           this.statusMsg = result
           this.statusType = 'success'
           this.openStatus = !this.openStatus
+          this.processingDescriptionRequest= false
         })
         .catch(err => {
           console.log(err)
+          this.processingDescriptionRequest= false
         })
     },
     openFileSelector() {
@@ -144,6 +169,7 @@ export default {
       this.updateUserProfileImage(image.srcElement.files[0])
     },
     updateUserProfileImage(chosenImage) {
+      this.processingImageRequest = true
       server
         .updateUserProfileImage(this.email, chosenImage, this.imageAux, this.token)
         .then(result => {
@@ -152,15 +178,18 @@ export default {
           this.statusMsg = result.msg
           this.statusType = 'success'
           this.openStatus = !this.openStatus
+          this.processingImageRequest = false
         })
         .catch(err => {
           console.log(err)
+          this.processingImageRequest = false
         })
     }
   },
   components: {
     KeyGenerator,
-    Status
+    Status,
+    ChangePassword
   }
 };
 </script>

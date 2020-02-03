@@ -1,6 +1,6 @@
 <template>
   <v-dialog width="20em" v-model="realOpen">
-    <v-card>
+    <v-card style="border-radius: 16px">
       <v-container>
         <v-row justify="center" style="margin: 3vh 0 6vh 0;">
           <v-avatar color="teal" size="4em">

@@ -4,13 +4,13 @@
     width="38em"
     persistent
   >
-    <v-card color="teal" dark>
+    <v-card style="border-radius: 16px" color="teal" dark>
       <v-card-title>
         <label style="margin-left: auto; margin-right: auto">Árticulos</label>
       </v-card-title>
       <v-card-text>
         <v-row justify="center" align="center">
-          <v-avatar color="teal lighten-2" size="128" style="cursor: pointer" @click="openFilesSelector">
+          <v-avatar color="teal lighten-2" size="160" style="cursor: pointer" @click="openFilesSelector">
             <v-img 
               :src="imageAsBase64"
             >

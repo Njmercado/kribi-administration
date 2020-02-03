@@ -1,13 +1,12 @@
 Modificaciones:
+  General:
+    + Los componentes ahora se ven un poco más redondeados.
   Componentes:
-    modalArticles:
-      + Agregada opcion para poder eliminar el articulo seleccionado
+    ModalWordInformation:
+      - Ahora el textfield de la palabra no se puede editar cuando 'action' sea 'update', esto es porque el cambio de la palabra, en si, implica eliminar y crear una nueva palabra, lo cual no está implementado todavia. 
+    ModalChangePassword:
+      + Componente creado.
+      + Este componente se usa para poder realizar el cambio de la contraseña del usuario.
   Requests:
-    updateArticle: 
-      + Creado este request para poder realizar cambios sobre los articulos seleccionados.
-      + Se pueden actualizar:
-        + Imagenes.
-        + Todo el contenido textual
-    deleteArticle:
-      + Request creado para poder eliminar los articulos que el usuario desee
-  
+    changeUserPassword:
+      + Este request es usado para poder cambiar la actual contraseña del usuario.

@@ -267,6 +267,30 @@ class serverRequest {
       });
   }
 
+  static changeUserPassword(email, oldPassword, newPassword, token) {
+    const uri = `${serverUri}/user/password`;
+
+    return axios({
+      url: uri,
+      method: 'put',
+      params: {
+        email,
+        oldPassword,
+        newPassword
+      },
+      headers: {
+        authorization: "Bearer " + token,
+        "x-authorization-server": "Basic " + serverKey,
+      }
+    })
+      .then(result => {
+        return result.data
+      })
+      .catch(err => {
+        throw err.response.data
+      })
+  }
+
   static getTopWords(token) {
     const uri = `${serverUri}/word/top`;
     const top = 5;

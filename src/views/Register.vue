@@ -47,6 +47,9 @@
           </v-row>
         </v-container>         
       </v-col>
+
+
+      <!-- Form Area -->
       <v-col cols="12" sm="12" xs="12" md="12" lg="7" xlg="7">
         <v-container>
           <v-row 
@@ -139,6 +142,7 @@
                     class="text-lowercase" 
                     color="#CD982B" 
                     @click="verifyData"
+                    :loading="processingRegister"
                     dark
                   >
                     registrarse 
@@ -169,10 +173,12 @@ import Status from '../components/ModalStatus.vue'
       openError: false,
       errorMsg: '',
       isTypingCode: 0,
-      typeMsg: 'error'
+      typeMsg: 'error',
+      processingRegister: false
     }),
     methods:{
       verifyData() {
+        this.processingRegister = true
         serverRequest.register(
           this.name, 
           this.email, 
@@ -184,6 +190,7 @@ import Status from '../components/ModalStatus.vue'
             this.openError = await !this.openError
             this.errorMsg = await result.msg
             this.typeMsg = await 'success'
+            this.processingRegister = false
             setTimeout(() => {
               this.redirectToLogin() 
             }, 1000)
@@ -191,6 +198,7 @@ import Status from '../components/ModalStatus.vue'
             this.typeMsg = await 'error'
             this.openError = !this.openError 
             this.errorMsg = result.msg
+            this.processingRegister = false
           } 
         })
       },
