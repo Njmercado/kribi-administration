@@ -1,22 +1,18 @@
 <template>
-  <v-dialog  
-    v-model="realOpener"
-    width="38em"
-    persistent
-  >
+  <v-dialog v-model="realOpener" width="38em" persistent scrollable>
     <v-card style="border-radius: 16px" color="teal" dark>
       <v-card-title>
         <label style="margin-left: auto; margin-right: auto">Árticulos</label>
       </v-card-title>
-      <v-card-text>
-        <v-row justify="center" align="center">
-          <v-avatar color="teal lighten-2" size="160" style="cursor: pointer" @click="openFilesSelector">
-            <v-img 
-              :src="imageAsBase64"
-            >
-            </v-img>
-          </v-avatar>
-        </v-row>
+        <v-avatar 
+          color="teal lighten-2" 
+          size="160" 
+          style="cursor: pointer; margin-left: auto; margin-right: auto" 
+          @click="openFilesSelector"
+        >
+          <v-img :src="imageAsBase64"></v-img>
+        </v-avatar>
+      <v-card-text class="custom--scroll">
         <v-row justify="center" align="center">
           <v-col cols="11">
             <v-text-field
@@ -37,6 +33,17 @@
               rounded dense filled
             >
             </v-text-field>
+          </v-col>
+        </v-row>
+        <v-row justify="center" align="center">
+          <v-col cols="11">
+            <v-textarea
+              label="Descripción"
+              v-model="description"
+              prepend-icon="mdi-comment"
+              rounded dense filled counter
+            >
+            </v-textarea>
           </v-col>
         </v-row>
         <v-row justify="center" align="center">
@@ -83,6 +90,7 @@ export default {
     author: '',
     title: '',
     id: '',
+    description: '',
     openStatus: false,
     statusMsg: '',
     statusType: 'error',
@@ -110,7 +118,14 @@ export default {
   methods:{
     createArticle() {
       request
-        .createArticle(this.author, this.link, this.title, this.chosenArticleImage, this.getToken)
+        .createArticle(
+          this.author, 
+          this.link, 
+          this.title, 
+          this.chosenArticleImage, 
+          this.description,
+          this.getToken
+        )
         .then(result => {
           this.statusMsg = result.msg
           this.statusType = "success"
@@ -140,7 +155,16 @@ export default {
     },
     updateArticle() {
       request
-        .updateArticle(this.id, this.articleData.photo, this.chosenArticleImage, this.title, this.link, this.author, this.getToken)
+        .updateArticle(
+          this.id, 
+          this.articleData.photo, 
+          this.chosenArticleImage, 
+          this.title, 
+          this.link, 
+          this.author, 
+          this.description, 
+          this.getToken
+        )
         .then(result => {
           this.statusMsg = result.msg
           this.statusType = "success"
@@ -184,3 +208,20 @@ export default {
   }  
 } 
 </script>
+
+<style scope>
+
+.custom--scroll::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 16px
+}
+.custom--scroll::-webkit-scrollbar-track {
+  border-radius: 16px
+}
+.custom--scroll::-webkit-scrollbar-thumb {
+  background: teal; 
+}
+.custom--scroll::-webkit-scrollbar-thumb:hover {
+  background: lightgrey; 
+}
+</style>

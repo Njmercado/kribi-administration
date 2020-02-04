@@ -314,7 +314,7 @@ class serverRequest {
       });
   }
 
-  static createArticle(author, link, title, photo, token) {
+  static createArticle(author, link, title, photo, description, token) {
     const form = new FormData();
     const uri = `${serverUri}/article`;
 
@@ -322,6 +322,7 @@ class serverRequest {
     form.append("link", link);
     form.append("title", title);
     form.append("photo", photo);
+    form.append("description", description);
 
     return axios
       .post(uri, form, {
@@ -363,7 +364,7 @@ class serverRequest {
       });
   }
 
-  static updateArticle(id, currentImage, image, title, link, author, token) {
+  static updateArticle(id, currentImage, image, title, link, author, description, token) {
     const form = new FormData()
     const uri = `${serverUri}/article`;
 
@@ -373,6 +374,7 @@ class serverRequest {
     form.append('title', title)
     form.append('link', link)
     form.append('author', author)
+    form.append('description', description)
 
     return axios.put( uri, form, {
       headers: {

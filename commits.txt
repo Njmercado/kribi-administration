@@ -1,12 +1,5 @@
 Modificaciones:
-  General:
-    + Los componentes ahora se ven un poco más redondeados.
   Componentes:
-    ModalWordInformation:
-      - Ahora el textfield de la palabra no se puede editar cuando 'action' sea 'update', esto es porque el cambio de la palabra, en si, implica eliminar y crear una nueva palabra, lo cual no está implementado todavia. 
-    ModalChangePassword:
-      + Componente creado.
-      + Este componente se usa para poder realizar el cambio de la contraseña del usuario.
-  Requests:
-    changeUserPassword:
-      + Este request es usado para poder cambiar la actual contraseña del usuario.
+    ModalArticle:
+      + Ahora los articulos tienen un campo para poner una pequeña descripción del articulo escrito.
+
