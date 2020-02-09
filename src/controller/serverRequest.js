@@ -1,5 +1,6 @@
 const axios = require("axios");
 const serverUri = require("../controller/keys").serverURI;
+// const serverUri = require("../controller/keys").serverURIDev;
 const serverKey = require("../controller/keys").serverKey;
 const FormData = require("form-data");
 
@@ -60,26 +61,28 @@ class serverRequest {
       });
   }
 
-  static getUserInfo(email, token) {
-    const uri = `${serverUri}/user/info`;
-    return axios({
-      method: "get",
-      url: uri,
-      params: {
-        email: email
-      },
-      headers: {
-        authorization: "Bearer " + token,
-        "x-authorization-server": "Basic " + serverKey
-      }
-    })
-      .then(result => {
-        console.log(result.data);
-      })
-      .catch(err => {
-        console.log(err.response.msg);
-      });
-  }
+  //No se la verdad para que funciona esta funcion pero mejor la comento, por si las moscas
+
+  // static getUserInfo(email, token) {
+  //   const uri = `${serverUri}/user/info`;
+  //   return axios({
+  //     method: "get",
+  //     url: uri,
+  //     params: {
+  //       email: email
+  //     },
+  //     headers: {
+  //       authorization: "Bearer " + token,
+  //       "x-authorization-server": "Basic " + serverKey
+  //     }
+  //   })
+  //     .then(result => {
+  //       console.log(result.data);
+  //     })
+  //     .catch(err => {
+  //       console.log(err.response.msg);
+  //     });
+  // }
 
   static getWord(word, token) {
     const uri = `${serverUri}/word`;
@@ -201,7 +204,7 @@ class serverRequest {
     const uri = `${serverUri}/user/hash`;
 
     return axios({
-      method: "get",
+      method: "post",
       url: uri,
       params: {
         email: email,

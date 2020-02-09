@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="realOpener" width="38em" persistent scrollable>
-    <v-card style="border-radius: 16px" color="teal" dark>
+    <v-card style="border-radius: 20px" color="teal" dark>
       <v-card-title>
         <label style="margin-left: auto; margin-right: auto">Árticulos</label>
       </v-card-title>
@@ -60,7 +60,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="text-lowercase" color="blue darken-1" @click="handleAction" rounded>
+        <v-btn class="text-lowercase" color="blue darken-1" @click="handleAction" :loading="isLoading" rounded>
           {{ action === "create"? "crear": "actualizar" }}
         </v-btn>
         <v-btn v-if="action === 'update'" class="text-lowercase" color="warning" @click="deleteArticle" rounded>
@@ -86,6 +86,7 @@ export default {
   name: "ModalArticle",
   data: () => ({
     realOpener: false,
+    isLoading: false,
     link: '',
     author: '',
     title: '',
@@ -117,6 +118,7 @@ export default {
   },
   methods:{
     createArticle() {
+      this.isLoading = true
       request
         .createArticle(
           this.author, 
@@ -131,29 +133,35 @@ export default {
           this.statusType = "success"
           this.openStatus = !this.openStatus
           this.imageAsBase64 = result.imageUrl
+          this.isLoading = false
         })
         .catch(err => {
           this.statusMsg = err.msg
           this.statusType = "error"
           this.openStatus = !this.openStatus
+          this.isLoading = false
         })
     },
     deleteArticle(){
+      this.isLoading = true
       request
         .deleteArticle(this.id, this.imageAsBase64, this.getToken)
         .then(result => {
           this.statusMsg = result.msg
           this.statusType = "success"
           this.openStatus = !this.openStatus
+          this.isLoading = false
           this.$emit("delete", this.index)
         })
         .catch(err => {
           this.statusMsg = err.msg
           this.statusType = "error"
           this.openStatus = !this.openStatus
+          this.isLoading = false
         })
     },
     updateArticle() {
+      this.isLoading = true
       request
         .updateArticle(
           this.id, 
@@ -171,11 +179,13 @@ export default {
           this.openStatus = !this.openStatus
           this.chosenArticleImage = ''
           this.imageAsBase64 = result.imageUrl
+          this.isLoading = false
         })
         .catch(err => {
           this.statusMsg = err.msg
           this.statusType = "error"
           this.openStatus = !this.openStatus
+          this.isLoading = false
         })
     },
     handleAction() {

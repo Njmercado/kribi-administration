@@ -1,9 +1,6 @@
 <template>
   <div>
     <v-dialog v-model="realOpener" width="40em" persistent scrollable>
-      <template v-slot:activator=" { on } ">
-        <v-icon v-on="on"></v-icon>
-      </template>
 
       <v-card style="border-radius: 16px" color="teal" dark>
         <v-card-title>
@@ -68,6 +65,7 @@
               class="text-lowercase"
               color="blue darken-1"
               @click="createOrUpdateWord"
+              :loading="isLoading"
               rounded
             >{{action=="create"?"crear":"actualizar"}}</v-btn>
           </v-col>
@@ -109,6 +107,7 @@ export default {
   name: "ModalWordInformation",
   data: () => ({
     realOpener: false,
+    isLoading: false,
     definitionsAux: [],
     examplesAux: [],
     wordAux: "",
@@ -153,6 +152,7 @@ export default {
       this.examplesAux.push(def.srcElement.value);
     },
     createOrUpdateWord() {
+      this.isLoading = true
       if (this.action == "update") this.updateWord();
       if (this.action == "create") this.createWord();
     },
@@ -169,10 +169,11 @@ export default {
           this.typeMsg = 'success'
           this.openError = !this.openError
           this.realOpener = false
+          this.isLoading = false
         })
         .catch(err => {
-          console.log("ERROR:")
           console.log(err)
+          this.isLoading = false
         })
     },
     createWord() {
@@ -185,6 +186,7 @@ export default {
           this.getToken
         )
         .then(result => {
+          this.isLoading = false
           if(result.err) {
             this.openError = !this.openError
             this.errorMsg = result.msg
@@ -192,16 +194,19 @@ export default {
           }
         }).catch(err => {
           console.log(err)
+          this.isLoading = false
         })
     },
     deleteWord() {
 
+      this.isLoading = true 
       server.deleteWord(this.word, this.languageAux, this.getToken)
       .then(result => {
         this.openError = !this.openError
         this.errorMsg = result
         this.typeMsg = 'success'
         this.realOpener = false
+        this.isLoading = false
         this.$emit('delete', this.wordIndex)
       })
       .catch(err => {
@@ -209,6 +214,7 @@ export default {
         this.errorMsg = err.msg
         this.typeMsg = 'error'
         this.realOpener = false
+        this.isLoading = false
       })
     }
   },

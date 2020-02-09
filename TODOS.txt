@@ -1,3 +1,2 @@
 TODO:
-    ModalArticle:
-      + Mostrar la imagen seleccionada por el usuario en el area a la que corresponde
+  + Optimizar las busquedas mediante el cache, para no tener que estar realizando peticiones al servidor sin ningún sentido. Aunque se deberia pensar cuando es necesrio o no.

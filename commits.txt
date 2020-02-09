@@ -1,5 +1,3 @@
 Modificaciones:
-  Componentes:
-    ModalArticle:
-      + Ahora los articulos tienen un campo para poner una pequeña descripción del articulo escrito.
-
+  General:
+    + Cambiadas las keys para poder usar el servidor https que está activo ahora
