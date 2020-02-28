@@ -5,7 +5,7 @@
       width="46em"
       height="auto"
     >
-      <v-card style="padding: 1em; border-radius: 16px" color="teal">
+      <v-card style="padding: 1em; border-radius: 16px" color="#843420">
         <v-container>
           <v-row justify="center" align="center">
             <label 

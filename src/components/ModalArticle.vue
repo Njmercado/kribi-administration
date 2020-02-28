@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="realOpener" width="38em" persistent scrollable>
-    <v-card style="border-radius: 20px" color="teal" dark>
+    <v-card style="border-radius: 20px" color="#CD982B" dark>
       <v-card-title>
         <label style="margin-left: auto; margin-right: auto">Árticulos</label>
       </v-card-title>
         <v-avatar 
-          color="teal lighten-2" 
+          color="#DFA85C" 
           size="160" 
           style="cursor: pointer; margin-left: auto; margin-right: auto" 
           @click="openFilesSelector"
@@ -229,7 +229,7 @@ export default {
   border-radius: 16px
 }
 .custom--scroll::-webkit-scrollbar-thumb {
-  background: teal; 
+  background: #DFA85C; 
 }
 .custom--scroll::-webkit-scrollbar-thumb:hover {
   background: lightgrey; 

@@ -1,6 +1,7 @@
 <template>
     <v-card
-      style="cursor: pointer; color: white; margin: .8em; border-radius: 16px"
+      class="my-4"
+      style="cursor: pointer; color: white; border-radius: 16px"
       :color="backgroundColor"
     >
       <v-card-title>
