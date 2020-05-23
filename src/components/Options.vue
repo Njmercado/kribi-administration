@@ -61,7 +61,7 @@ import { mapGetters } from "vuex";
 import ModalWordInformation from "../components/ModalWordInformation.vue";
 import ModalArticle from "../components/ModalArticle.vue";
 import TopWords from "../components/ModalTopWords.vue";
-import request from "../controller/serverRequest";
+import {words as Words} from "../controller/Server/index.js";
 
 export default {
   name: "Options",
@@ -75,7 +75,7 @@ export default {
       { color: "teal", icon: "mdi-alpha-w", text: "words" },
       { color: "#CD982B", icon: "mdi-file-document-outline", text: "articles" },
       { color: "#8c3420", icon: "mdi-numeric-5", text: "top 5" }
-    ]
+    ],
   }),
   props: ["onMovil"],
   methods: {
@@ -83,11 +83,11 @@ export default {
       if (this.topEspanol.length == 0) {
         // Solo va a realizar la busqueda una sola vez
 
-        request
+        Words
           .getTopWords(this.getToken)
           .then(result => {
-            this.topPalenque = result.palenque;
-            this.topEspanol = result.espanol;
+            this.topPalenque = result.message.palenque;
+            this.topEspanol = result.message.espanol;
             this.openTopWords = !this.openTopWords;
           })
           .catch(err => {
@@ -98,9 +98,7 @@ export default {
       }
     },
     openTarget(target) {
-      if (target === "words")
-        this.openCloseWordInformationModal = !this
-          .openCloseWordInformationModal;
+      if (target === "words") this.openCloseWordInformationModal = !this.openCloseWordInformationModal;
       if (target === "articles") this.openArticleModal = !this.openArticleModal;
       if (target === "top 5") this.openTopWordsHandler();
     }

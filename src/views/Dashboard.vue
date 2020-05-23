@@ -8,7 +8,6 @@
         <v-btn
           class="mt-10"
           color="#8c3420"
-          v-if="onMovil"
           @click="openSideBarConfigurations = !openSideBarConfigurations"
           rounded
           small
@@ -56,9 +55,10 @@
                   class="mx-4 my-4"
                   v-for="(word, index) in words"
                   :key="index"
-                  :word="word"
+                  :word="word.palabra"
+                  :id="word._id"
                   size="13"
-                  @click.native="findWordInfo(word, index)"
+                  @click.native="findWordInfo(word.palabra, index)"
                 ></Word>
               </v-row>
             </v-card>
@@ -114,6 +114,7 @@
       :definitions="definitionFoundWord"
       :examples="examplesFoundWord"
       :language="wordLanguage"
+      :id="wordId"
       :wordIndex="wordIndex"
       @delete="wordDeletedHandler"
     ></ModalWordInformation>
@@ -135,7 +136,7 @@ import ModalArticle from "../components/ModalArticle.vue";
 import ModalWordInformation from "../components/ModalWordInformation.vue";
 import Options from "../components/Options.vue";
 import SideBarConfigurations from "../components/SideBarConfigurations.vue";
-import request from "../controller/serverRequest";
+import { words as Words, articles as Articles } from "../controller/Server/index.js";
 import { mapGetters } from "vuex";
 
 export default {
@@ -150,6 +151,7 @@ export default {
     wordSearcher: "",
     foundWord: "", // This is used to get the word information when user click on one
     definitionFoundWord: [],
+    wordId: '',
     examplesFoundWord: "",
     wordLanguage: "",
     wordIndex: "",
@@ -167,13 +169,14 @@ export default {
       this.openCloseWordInformationModal = !this.openCloseWordInformationModal;
     },
     findWordInfo(word, index) {
-      request
+      Words
         .getWordInfo(word, this.getToken)
         .then(result => {
           this.foundWord = result.palabra;
           this.definitionFoundWord = result.definicion.split("/");
           this.examplesFoundWord = result.ejemplos;
           this.wordLanguage = result.idioma;
+          this.wordId = result.id
           this.showWordInformationModal("update", index);
         })
         .catch(err => {
@@ -193,7 +196,7 @@ export default {
     },
     searchSomeWords(word) {
       this.words = [];
-      request
+      Words
         .getWord(word, this.getToken)
         .then(result => {
           this.words = result;
@@ -203,10 +206,10 @@ export default {
         });
     },
     searchSomeArticles(article) {
-      request
+      Articles
         .getArticles(article, this.getToken)
         .then(result => {
-          this.articles = result;
+          this.articles = result.message;
         })
         .catch(err => {
           console.log(err);

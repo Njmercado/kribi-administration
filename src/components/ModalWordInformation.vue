@@ -14,7 +14,6 @@
               style="margin-bottom: -4vh"
               label="Palabra"
               v-model="wordAux"
-              :readonly="action === 'create'? false: true"
               prepend-icon="mdi-file-word-box"
               rounded
               filled
@@ -117,7 +116,7 @@
 </template>
 
 <script>
-import server from "../controller/serverRequest";
+import { words as Words } from "../controller/Server/index.js";
 import Status from "../components/ModalStatus";
 import { mapGetters } from "vuex";
 
@@ -138,6 +137,7 @@ export default {
   props: [
     "open",
     "word",
+    "id",
     "color",
     "action",
     "examples",
@@ -184,15 +184,17 @@ export default {
       if (this.action == "create") this.createWord();
     },
     updateWord() {
-      server
+      Words
         .updateWord(
+          this.id,
           this.wordAux,
           this.definitionsAux,
           this.examplesAux,
           this.getToken
         )
         .then(result => {
-          this.errorMsg = result.msg;
+          console.log(result)
+          this.errorMsg = result.message;
           this.typeMsg = "success";
           this.openError = !this.openError;
           this.realOpener = false;
@@ -204,7 +206,7 @@ export default {
         });
     },
     createWord() {
-      server
+      Words
         .createWord(
           this.wordAux,
           this.definitionsAux,
@@ -214,11 +216,9 @@ export default {
         )
         .then(result => {
           this.isLoading = false;
-          if (result.exist) {
-            this.openError = !this.openError;
-            this.errorMsg = result.msg;
-            this.typeMsg = "error";
-          }
+          this.openError = !this.openError;
+          this.errorMsg = result.message;
+          this.typeMsg = result.error ? "error": "success";
         })
         .catch(err => {
           console.log(err);
@@ -227,13 +227,14 @@ export default {
     },
     deleteWord() {
       this.isLoading = true;
-      server
-        .deleteWord(this.word, this.languageAux, this.getToken)
+      Words
+        .deleteWord(this.id, this.getToken)
         .then(result => {
+          console.log(result)
           this.openError = !this.openError;
-          this.errorMsg = result;
-          this.typeMsg = "success";
-          this.realOpener = false;
+          this.errorMsg = result.message;
+          this.typeMsg = "success";          
+          this.realOpener = false; // Esta variable es usada para poder cerrar el modal cuando se presione sobre eliminar la palabra
           this.isLoading = false;
           this.$emit("delete", this.wordIndex);
         })

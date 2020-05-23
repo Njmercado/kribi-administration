@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import serverRequest from '../controller/serverRequest.js'
+import { login as Login } from '../controller/Server/index.js'
 import Status from '../components/ModalStatus.vue'
 import { mapMutations } from 'vuex'
   
@@ -151,10 +151,10 @@ import { mapMutations } from 'vuex'
       processingLogin: false
     }),
     methods:{
-      ...mapMutations(['setToken', 'setEmail', 'setName', 'setImage', 'setDescription']),
+      ...mapMutations(['setToken', 'setEmail', 'setName', 'setImage', 'setDescription', 'setUserId']),
       verifyData(){
         this.processingLogin = true
-        const response = serverRequest.login(this.email, this.password)
+        const response = Login.login(this.email, this.password)
         response.then(res => {
           if(res.status == 200){
 
@@ -162,9 +162,10 @@ import { mapMutations } from 'vuex'
             this.email = ''
 
             this.setToken(res.data.token)
-            this.setEmail(res.data.data._id)
+            this.setEmail(res.data.data.email)
             this.setName(res.data.data.nombre)
             this.setImage(res.data.data.imagen)
+            this.setUserId(res.data.data._id)
             this.setDescription(res.data.data.descripcion)
             
             this.processingLogin = false
@@ -172,7 +173,7 @@ import { mapMutations } from 'vuex'
           } 
           else{
             this.openError = !this.openError
-            this.errorMsg = res.msg
+            this.errorMsg = res.message.message
             this.processingLogin = false
           } 
         })

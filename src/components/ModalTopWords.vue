@@ -26,10 +26,10 @@
                     <div
                       v-for="(word, index) in espanol"
                       :key="index"
-                      @click.stop="openWordInfoModalHandler(word._id)"
+                      @click.stop="openWordInfoModalHandler(word.palabra)"
                       >
                       <Word
-                        :word="word._id"
+                        :word="word.palabra"
                         :popularity="word.popularidad"
                         size="13"
                         >
@@ -49,10 +49,10 @@
                     <div
                       v-for="(word, index) in palenque"
                       :key="index"
-                      @click.stop="openWordInfoModalHandler(word._id)"
+                      @click.stop="openWordInfoModalHandler(word.palabra)"
                     >
                       <Word
-                        :word="word._id"
+                        :word="word.palabra"
                         :popularity="word.popularidad"
                         size="13"
                         >
@@ -69,6 +69,7 @@
     <WordInfo
       :open="openWordInfoModal"
       :word="wordAux"
+      :id="chosenWordId"
       :definitions="definitionsAux"
       :examples="examplesAux"
       :language="languageAux"
@@ -80,7 +81,7 @@
 <script>
 import Word from '../components/Word.vue'
 import WordInfo from '../components/ModalWordInformation.vue'
-import request from '../controller/serverRequest.js'
+import {words as Words} from '../controller/Server/index.js'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -92,6 +93,7 @@ export default {
     definitionsAux: '',
     examplesAux: '',
     languageAux: '',
+    chosenWordId: '',
   }),
   props: [
     "open",
@@ -105,11 +107,12 @@ export default {
   },
   methods:{
     openWordInfoModalHandler(word){
-      request
+      Words
         .getWordInfo(word, this.getToken)
         .then(result => {
           this.languageAux = result.idioma
           this.wordAux = word
+          this.chosenWordId = result.id
           this.definitionsAux = result.definicion.split("/")
           this.examplesAux = result.ejemplos
           this.openWordInfoModal = !this.openWordInfoModal

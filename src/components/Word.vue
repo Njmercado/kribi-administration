@@ -23,7 +23,8 @@ export default {
     'word',
     'definitions',
     'popularity',
-    'size'
+    'size',
+    'id'
   ],
   data: () => ({
     backgroundColor: "white",

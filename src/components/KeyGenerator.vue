@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import server from '../controller/serverRequest'
+import { users as Users } from '../controller/Server/index.js'
 import Status from '../components/ModalStatus'
 import {mapGetters} from 'vuex'
 
@@ -92,7 +92,7 @@ export default {
     },
     createHash(){
       this.isLoading = true
-      server.createHash(this.getEmail, this.password, this.getToken) 
+      Users.createHash(this.getEmail, this.password, this.getToken) 
       .then(result => {
         this.keyButtonDisable = false
         this.key = result.hash

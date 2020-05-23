@@ -1,10 +1,22 @@
-const axios = require("axios");
-const serverUri = require("../controller/keys").serverURI;
-// const serverUri = require("../controller/keys").serverURIDev;
-const serverKey = require("../controller/keys").serverKey;
-const FormData = require("form-data");
+// const axios = require("axios");
+// const serverUri = require("../controller/keys").serverURI;
+const serverUri = require("../keys.js").serverURIDev;
+const serverKey = require("../keys").serverKey;
 
-class serverRequest {
+import { Words } from './Words'
+import { Articles } from './Articles'
+import { Login } from './Login'
+import { Register } from './Register'
+import { Users } from './Users'
+
+
+const words = new Words(serverUri, serverKey)
+const articles = new Articles(serverUri, serverKey)
+const login = new Login(serverUri, serverKey)
+const register = new Register(serverUri, serverKey)
+const users = new Users(serverUri, serverKey)
+
+/*class serverRequest {
   static login(email, password) {
     const uri = `${serverUri}/login`;
     const params = {
@@ -25,7 +37,7 @@ class serverRequest {
       .catch(err => {
         return {
           status: err.response.status,
-          msg: err.response.data
+          message: err.response.data
         };
       });
   }
@@ -85,21 +97,18 @@ class serverRequest {
   // }
 
   static getWord(word, token) {
-    const uri = `${serverUri}/word`;
+    const uri = `${serverUri}/words/some/${word}`;
 
     return axios({
       method: "get",
       url: uri,
-      params: {
-        word: word
-      },
       headers: {
         authorization: "Bearer " + token,
         "x-authorization-server": "Basic " + serverKey
       }
     })
       .then(result => {
-        return result.data.response;
+        return result.data.message.response;
       })
       .catch(err => {
         return err.response;
@@ -107,21 +116,18 @@ class serverRequest {
   }
 
   static getWordInfo(word, token) {
-    const uri = `${serverUri}/word/info`;
+    const uri = `${serverUri}/words/info/${word}`;
 
     return axios({
       method: "get",
       url: uri,
-      params: {
-        word: word
-      },
       headers: {
         authorization: "Bearer " + token,
         "x-authorization-server": "Basic " + serverKey
       }
     })
       .then(result => {
-        return result.data;
+        return result.data.message[0];
       })
       .catch(err => {
         return err.response;
@@ -129,7 +135,7 @@ class serverRequest {
   }
 
   static createWord(word, definitions, examples, language, token) {
-    const uri = `${serverUri}/word`;
+    const uri = `${serverUri}/words`;
 
     return axios({
       method: "post",
@@ -153,16 +159,12 @@ class serverRequest {
       });
   }
 
-  static deleteWord(word, language, token) {
-    const uri = `${serverUri}/word`;
+  static deleteWord(id, token) {
+    const uri = `${serverUri}/words/${id}`;
 
     return axios({
       method: "delete",
       url: uri,
-      params: {
-        word: word,
-        language: language
-      },
       headers: {
         authorization: "Bearer " + token,
         "x-authorization-server": "Basic " + serverKey
@@ -176,8 +178,8 @@ class serverRequest {
       });
   }
 
-  static updateWord(word, definitions, examples, token) {
-    const uri = `${serverUri}/word`;
+  static updateWord(id, word, definitions, examples, token) {
+    const uri = `${serverUri}/words/${id}`;
 
     return axios({
       method: "put",
@@ -224,7 +226,7 @@ class serverRequest {
   }
 
   static updateUserDescription(email, description, token) {
-    const uri = `${serverUri}/user/description`;
+    const uri = `${serverUri}/users/description`;
 
     return axios({
       method: "put",
@@ -248,7 +250,7 @@ class serverRequest {
 
   static updateUserProfileImage(email, image, currentImage, token) {
     const form = new FormData();
-    const uri = `${serverUri}/user/image`;
+    const uri = `${serverUri}/users/image`;
 
     form.append("photo", image);
     form.append("currentImage", currentImage);
@@ -271,7 +273,7 @@ class serverRequest {
   }
 
   static changeUserPassword(email, oldPassword, newPassword, token) {
-    const uri = `${serverUri}/user/password`;
+    const uri = `${serverUri}/users/password`;
 
     return axios({
       url: uri,
@@ -295,15 +297,11 @@ class serverRequest {
   }
 
   static getTopWords(token) {
-    const uri = `${serverUri}/word/top`;
-    const top = 5;
+    const uri = `${serverUri}/words/top/5`;
 
     return axios({
       method: "get",
       url: uri,
-      params: {
-        top: top
-      },
       headers: {
         authorization: "Bearer " + token,
         "x-authorization-server": "Basic " + serverKey
@@ -319,7 +317,7 @@ class serverRequest {
 
   static createArticle(author, link, title, photo, description, token) {
     const form = new FormData();
-    const uri = `${serverUri}/article`;
+    const uri = `${serverUri}/articles`;
 
     form.append("author", author);
     form.append("link", link);
@@ -343,16 +341,12 @@ class serverRequest {
       });
   }
 
-  static deleteArticle(id, imageId, token) {
-    const uri = `${serverUri}/article`;
+  static deleteArticle(id, token) {
+    const uri = `${serverUri}/articles/${id}`;
 
     return axios({
       method: "delete",
       url: uri,
-      params: {
-        id,
-        imageId
-      },
       headers: {
         authorization: "Bearer " + token,
         "x-authorization-server": "Basic " + serverKey
@@ -369,17 +363,16 @@ class serverRequest {
 
   static updateArticle(id, currentImage, image, title, link, author, description, token) {
     const form = new FormData()
-    const uri = `${serverUri}/article`;
+    const uri = `${serverUri}/articles/${id}`;
 
     form.append('photo', image)
-    form.append('id', id)
-    form.append('currentImage', (typeof image) == "object"? currentImage: '')
+    form.append('currentImage', (typeof image) == "object" ? currentImage : '')
     form.append('title', title)
     form.append('link', link)
     form.append('author', author)
     form.append('description', description)
 
-    return axios.put( uri, form, {
+    return axios.put(uri, form, {
       headers: {
         authorization: "Bearer " + token,
         "x-authorization-server": "Basic " + serverKey,
@@ -395,14 +388,11 @@ class serverRequest {
   }
 
   static getArticles(articleTitle, token) {
-    const uri = `${serverUri}/article/autocompletion`;
+    const uri = `${serverUri}/articles/${articleTitle}`;
 
     return axios({
       method: "get",
       url: uri,
-      params: {
-        title: articleTitle
-      },
       headers: {
         authorization: "Bearer " + token,
         "x-authorization-server": "Basic " + serverKey
@@ -416,5 +406,14 @@ class serverRequest {
       });
   }
 }
+*/
 
-export default serverRequest;
+export {
+  words,
+  articles,
+  login,
+  register,
+  users
+}
+
+// export default serverRequest;

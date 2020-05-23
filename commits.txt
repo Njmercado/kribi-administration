@@ -1,20 +1,7 @@
 Modificaciones:
   General:
-    + Cambiadas las keys para poder usar el servidor https que está activo ahora
-  Components: 
-    ModalWordInformation:
-      + Ahora cuando se intenta agregar una nueva palabra, y esta palabra ya existe, se envia un mensaje de error mencionando que la palabra ya existe.
-    SideBarConfigurations:
-      + Componente creado para mostrar todas las configuraciones que el usuario puede realizar con su perfil.
-  View:
-    Dashboard:
-      + Ahora las vista está mediante componentes.
-      + Esto se hace con el proposito de que todo sea super accesible, de una, y no estar dando varios clicks para realizar una sola tarea.
-      + El float button que contenia las configuraciones(agregar y configurar usuario) ahora está separado en dos partes:
-        + Un panel en la parte de abajo de la pantalla que muestra las opciones para agregar contenido(Palabras, articulos y top palabras).
-        + SideBarConfigurations, el cual me muestra las configuraciones de usuario.
-  TODOS:
-    + Agregar Cookies para poder visualizar la página cuando no se tenga internet.
-    + Agregar el Caché.
-    + Guarda cuanta información sea posible en el navegador local, para así evitar realizar tanto llamado al servidor.
-    + Agregar la opción de configurar la descripción de cada usuario.
+    + Cambiadas las rutas para poder acceder a la API.
+    + Modularizadas las rutas de llamado al servidor, por medio de archivos separados con su respectiva funcion. Esto se hace con el objetivo de poder realizar código mantenible y escalable.
+  Components:
+    * ModalWordInformation:
+      + Ahora se puede editar la palabra buscada para poder ser cambiada. Esto es por si la palabra se ha introducido mal.

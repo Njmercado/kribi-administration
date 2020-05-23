@@ -54,9 +54,11 @@
 </template>
 
 <script>
-import request from '../controller/serverRequest.js'
+
+import { users as Users } from '../controller/Server/index.js'
 import Status from './ModalStatus.vue'
 import {mapGetters} from 'vuex'
+
 export default {
   name: "ModalChangePassword",
   data: () => ({
@@ -83,10 +85,10 @@ export default {
   methods:{
     changePassword() {
       this.processingPasswordChange = true
-      request
+      Users
         .changeUserPassword(this.getEmail, this.oldPassword, this.newPassword, this.getToken)
         .then(result => {
-          this.statusMsg = result.msg
+          this.statusMsg = result.message
           this.statusType = "success"
           this.openStatus = !this.openStatus 
           this.processingPasswordChange = false
@@ -94,7 +96,7 @@ export default {
           this.oldPassword = ''
         })
         .catch(err => {
-          this.statusMsg = err.msg
+          this.statusMsg = err.message
           this.statusType = "error"
           this.openStatus = !this.openStatus 
           this.processingPasswordChange = false

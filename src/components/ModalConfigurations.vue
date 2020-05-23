@@ -99,7 +99,7 @@
 import KeyGenerator from "../components/KeyGenerator.vue";
 import ChangePassword from "../components/ModalChangePassword.vue";
 import { mapMutations } from "vuex";
-import server from "../controller/serverRequest.js";
+import {users as Users} from "../controller/Server/index.js";
 import Status from '../components/ModalStatus.vue'
 
 export default {
@@ -148,7 +148,7 @@ export default {
     },
     updateUserDescription() {
       this.processingDescriptionRequest= true
-      server
+      Users
         .updateUserDescription(this.email, this.descriptionAux, this.token)
         .then(result => {
           this.setDescription(this.descriptionAux)
@@ -170,7 +170,7 @@ export default {
     },
     updateUserProfileImage(chosenImage) {
       this.processingImageRequest = true
-      server
+      Users
         .updateUserProfileImage(this.email, chosenImage, this.imageAux, this.token)
         .then(result => {
           this.imageAux = result.imageUrl

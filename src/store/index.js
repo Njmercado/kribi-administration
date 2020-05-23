@@ -15,7 +15,8 @@ export default new Vuex.Store({
     email: '',
     name: '',
     image: '',
-    description: ''
+    description: '',
+    userId: ''
   },
   mutations: {
     setToken(state, token) {
@@ -33,6 +34,9 @@ export default new Vuex.Store({
     setDescription(state, description) {
       state.description = description 
     },
+    setUserId(state, id) {
+      state.userId = id
+    }
   },
   actions: {
   },
@@ -44,6 +48,7 @@ export default new Vuex.Store({
     getName: state => state.name,
     getImage: state => state.image,
     getDescription: state => state.description,
+    getUserId: state => state.userId,
   },
   plugins: [vuexLocalStorage.plugin]
 })

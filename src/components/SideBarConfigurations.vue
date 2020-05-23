@@ -2,9 +2,8 @@
   <div style="height: 100%">
     <v-navigation-drawer
       v-model="realOpener"
-      :absolute="onMovil"
-      :temporary="onMovil"
-      :permanent="!onMovil"
+      absolute
+      temporary
       color="#8c3420"
       dark
     >
@@ -67,15 +66,13 @@
 <script>
 import ChangePassword from "../components/ModalChangePassword.vue";
 import KeyGenerator from "../components/KeyGenerator.vue";
-import request from "../controller/serverRequest.js";
+import {users as Users} from "../controller/Server/index.js";
 import Status from "../components/ModalStatus.vue";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "SideBarConfigurations",
   data: () => ({
-    expandable: true,
-    onMovil: false,
     realOpener: false,
     statusMsg: "",
     statusType: "error",
@@ -94,14 +91,6 @@ export default {
   computed: {
     ...mapGetters(["getToken", "getName", "getEmail", "getImage"])
   },
-  mounted() {
-    if (
-      /Mobi/i.test(navigator.userAgent) ||
-      /Android/i.test(navigator.userAgent)
-    ) {
-      this.onMovil = true;
-    }
-  },
   methods: {
     ...mapMutations(["setToken", "setImage"]),
     logout() {
@@ -118,7 +107,7 @@ export default {
     updateUserProfileImage(chosenImage) {
       const pass = typeof chosenImage === "undefined" ? false : true;
       if (pass) {
-        request
+        Users
           .updateUserProfileImage(
             this.getEmail,
             chosenImage,
@@ -132,8 +121,6 @@ export default {
             this.openStatus = !this.openStatus;
           })
           .catch(err => {
-            console.log("ERROR: ");
-            console.log(err.response.data.msg);
             this.statusMsg = err.response.data.msg;
             this.statusType = "error";
             this.openStatus = !this.openStatus;

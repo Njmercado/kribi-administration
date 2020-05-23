@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import request from '../controller/serverRequest.js'
+import { articles as Articles } from '../controller/Server/index.js'
 import {mapGetters} from 'vuex'
 import Status from '../components/ModalStatus.vue'
 
@@ -119,7 +119,7 @@ export default {
   methods:{
     createArticle() {
       this.isLoading = true
-      request
+      Articles
         .createArticle(
           this.author, 
           this.link, 
@@ -129,14 +129,14 @@ export default {
           this.getToken
         )
         .then(result => {
-          this.statusMsg = result.msg
+          this.statusMsg = result.message
           this.statusType = "success"
           this.openStatus = !this.openStatus
           this.imageAsBase64 = result.imageUrl
           this.isLoading = false
         })
         .catch(err => {
-          this.statusMsg = err.msg
+          this.statusMsg = err.message
           this.statusType = "error"
           this.openStatus = !this.openStatus
           this.isLoading = false
@@ -144,10 +144,10 @@ export default {
     },
     deleteArticle(){
       this.isLoading = true
-      request
-        .deleteArticle(this.id, this.imageAsBase64, this.getToken)
+      Articles
+        .deleteArticle(this.id, this.getToken)
         .then(result => {
-          this.statusMsg = result.msg
+          this.statusMsg = result.message
           this.statusType = "success"
           this.openStatus = !this.openStatus
           this.isLoading = false
@@ -162,7 +162,7 @@ export default {
     },
     updateArticle() {
       this.isLoading = true
-      request
+      Articles
         .updateArticle(
           this.id, 
           this.articleData.photo, 
@@ -174,7 +174,7 @@ export default {
           this.getToken
         )
         .then(result => {
-          this.statusMsg = result.msg
+          this.statusMsg = result.message
           this.statusType = "success"
           this.openStatus = !this.openStatus
           this.chosenArticleImage = ''
@@ -182,7 +182,7 @@ export default {
           this.isLoading = false
         })
         .catch(err => {
-          this.statusMsg = err.msg
+          this.statusMsg = err.message
           this.statusType = "error"
           this.openStatus = !this.openStatus
           this.isLoading = false

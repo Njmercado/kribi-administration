@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import serverRequest from '../controller/serverRequest.js'
+import { register as Register } from '../controller/Server/index.js'
 import Status from '../components/ModalStatus.vue'
   
   export default {
@@ -179,7 +179,7 @@ import Status from '../components/ModalStatus.vue'
     methods:{
       verifyData() {
         this.processingRegister = true
-        serverRequest.register(
+        Register.register(
           this.name, 
           this.email, 
           this.password, 
