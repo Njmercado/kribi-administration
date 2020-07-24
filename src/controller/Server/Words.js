@@ -19,7 +19,6 @@ export class Words {
       }
     })
       .then(result => {
-        console.log(result)
         return result.data.message.response;
       })
       .catch(err => {

@@ -1,2 +1,5 @@
 TODO:
   + Optimizar las busquedas mediante el cache, para no tener que estar realizando peticiones al servidor sin ningún sentido. Aunque se deberia pensar cuando es necesrio o no.
+  + Agregar, de alguna manera, que se pueda editar la informacion mostrada en las palabras del dashboard, sin necesidad de abrir el modal. Fast Edit.
+  + Terminarl el front para la modificacion de palabras.
+  + Hacer el editor para los articulos.
